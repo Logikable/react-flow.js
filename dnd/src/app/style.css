@@ -1,0 +1,41 @@
+
+body {
+  margin: 150px 0px 0px 150px;
+}
+
+.container {
+  border: 1px solid #CCC;
+  width: 800px;
+  height: 600px;
+}
+
+.containerCanvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.containerDragHover {
+	background-color: green;
+}
+
+.nodeDragHover {
+	background-color: green;
+}
+
+.node {
+	background-color: #E0E0E0;
+  width: 100px;
+  height: 100px;
+}
+
+.branchHandle {
+}
+
+.branchHolder {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
