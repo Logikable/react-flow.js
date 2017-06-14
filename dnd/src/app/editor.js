@@ -5,18 +5,23 @@ import PropTypes from 'prop-types';
 import { ItemTypes } from './constants';
 import Node from './node';
 
-var spec = {
+const spec = {
 	drop: function(props, monitor, component) {
 		const delta = monitor.getDifferenceFromInitialOffset()
-		const rec = ReactDOM.findDOMNode(component).getBoundingClientRect()
-		const tile = monitor.getItem()
+		
+		if (monitor.getItemType() === ItemTypes.tile) {
+			const rec = ReactDOM.findDOMNode(component).getBoundingClientRect()
+			const tile = monitor.getItem()
 
-		component.setState({
-			nodes: component.state.nodes.concat([{
-				left: tile.left + delta.x - rec.left,
-				top: tile.top + delta.y - rec.top
-			}])
-		})
+			component.addNode(tile.left + delta.x - rec.left,
+				tile.top + delta.y - rec.top)
+		} else if (monitor.getItemType() === ItemTypes.node) {
+			const node = monitor.getItem()
+
+			component.moveNode(node.id,
+				node.left + delta.x,
+				node.top + delta.y)
+		}
 	}
 }
 
@@ -37,6 +42,22 @@ class Editor extends Component {
 		}
 	}
 
+	addNode(left, top) {
+		this.setState({
+			nodes: this.state.nodes.concat([{
+				left: left,
+				top: top
+			}])
+		})
+	}
+
+	moveNode(id, left, top) {
+		var stateCopy = Object.assign({}, this.state)
+		stateCopy.nodes = stateCopy.nodes.slice()
+		stateCopy.nodes[id] = {left, top}
+		this.setState(stateCopy)
+	}
+
 	render() {
 		const { connectDropTarget } = this.props;
 		const style = {
@@ -50,14 +71,15 @@ class Editor extends Component {
 		var nodes = []
 		for (var i = 0; i < this.state.nodes.length; i += 1) {
 			var data = this.state.nodes[i]
-			nodes.push(<Node key={i} left={data.left} top={data.top} />)
+			console.log(data)
+			nodes.push(<Node key={i} id={i} left={data.left} top={data.top} />)
 		} 
 
 		return connectDropTarget(
 			<div style={style}>
 				{nodes}
 			</div>
-		);
+		)
 	}
 }
 
@@ -65,4 +87,4 @@ Editor.propTypes = {
 	connectDropTarget: PropTypes.func
 }
 
-export default DropTarget(ItemTypes.tile, spec, collect)(Editor);
+export default DropTarget([ItemTypes.tile, ItemTypes.node], spec, collect)(Editor)

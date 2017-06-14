@@ -4,7 +4,7 @@ import { DragSource } from 'react-dnd';
 import PropTypes from 'prop-types';
 import { ItemTypes } from './constants';
 
-var spec = {
+const spec = {
 	beginDrag: function(props, monitor, component) {
 		return {id: props.id, left: component.state.left, top: component.state.top}
 	}
@@ -51,4 +51,4 @@ Tile.propTypes = {
 	connectDragPreview: PropTypes.func.isRequired
 }
 
-export default DragSource(ItemTypes.tile, spec, collect)(Tile);
+export default DragSource(ItemTypes.tile, spec, collect)(Tile)

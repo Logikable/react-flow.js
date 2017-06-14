@@ -1,3 +1,4 @@
 export const ItemTypes = {
-	tile: 'tile'
+	tile: 'tile',
+	node: 'node'
 }
