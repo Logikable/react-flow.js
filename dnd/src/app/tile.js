@@ -1,12 +1,15 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { DragSource } from 'react-dnd';
 import PropTypes from 'prop-types';
-import { ItemTypes } from './constants';
+import React, { Component } from 'react';
+import { DragSource } from 'react-dnd';
+import ReactDOM from 'react-dom';
+import ReactTooltip from 'react-tooltip';
+import { ItemTypes, ProperNames, SourceFiles } from './constants';
+
+require('../css/styles.css');
 
 const spec = {
 	beginDrag: function(props, monitor, component) {
-		return {id: props.id, left: component.state.left, top: component.state.top}
+		return {left: component.state.left, top: component.state.top}
 	}
 }
 
@@ -23,12 +26,13 @@ class Tile extends Component {
 	}
 
 	componentDidMount() {
-		const { connectDragPreview } = this.props;
+		const { name, connectDragPreview } = this.props;
 
 		const img = new Image();
-		img.src = '../img/smile.png';
+		img.src = '../img/' + SourceFiles['tile'][name];
 		img.onload = () => connectDragPreview(img);
 
+		// figuring out where the tile is located on the screen
 		const rec = ReactDOM.findDOMNode(this).getBoundingClientRect()
 		this.setState({
 			left: rec.left,	// + window.scrollX is not included because otherwise it would be subtracted later anyways
@@ -37,16 +41,22 @@ class Tile extends Component {
 	}
 
 	render() {
-		const { connectDragSource } = this.props;
+		const { name, connectDragSource } = this.props;
 
 		return connectDragSource(
-			<img src={require('../img/smile32x32.png')} />
+			<div>
+				<img
+					data-tip={ProperNames[name]}
+					src={require('../img/' + SourceFiles['tile'][name])}
+				/>
+				<ReactTooltip class={'tooltip'} />
+			</div>
 		)
 	}
 }
 
 Tile.propTypes = {
-	id: PropTypes.number.isRequired,
+	name: PropTypes.string.isRequired,
 	connectDragSource: PropTypes.func.isRequired,
 	connectDragPreview: PropTypes.func.isRequired
 }

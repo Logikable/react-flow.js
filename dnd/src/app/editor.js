@@ -1,14 +1,14 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { DropTarget } from 'react-dnd';
-import PropTypes from 'prop-types';
 import { ItemTypes } from './constants';
 import Node from './node';
 
 const spec = {
 	drop: function(props, monitor, component) {
 		const delta = monitor.getDifferenceFromInitialOffset()
-		
+
 		if (monitor.getItemType() === ItemTypes.tile) {
 			const rec = ReactDOM.findDOMNode(component).getBoundingClientRect()
 			const tile = monitor.getItem()
@@ -71,7 +71,6 @@ class Editor extends Component {
 		var nodes = []
 		for (var i = 0; i < this.state.nodes.length; i += 1) {
 			var data = this.state.nodes[i]
-			console.log(data)
 			nodes.push(<Node key={i} id={i} left={data.left} top={data.top} />)
 		} 
 

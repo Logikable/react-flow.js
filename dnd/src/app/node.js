@@ -1,7 +1,10 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { DragSource } from 'react-dnd';
-import PropTypes from 'prop-types';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 import { ItemTypes } from './constants';
+
+require('../css/react-contextmenu.css')
 
 const spec = {
 	beginDrag: function(props, monitor, component) {
@@ -32,7 +35,7 @@ class Node extends Component {
 	}
 
 	render() {
-		const { isDragging, connectDragSource } = this.props
+		const { id, isDragging, connectDragSource } = this.props
 		if (isDragging) {
 			return null
 		}
@@ -45,7 +48,19 @@ class Node extends Component {
 
 		return connectDragSource(
 			<div style={style}>
-				<img src={require('../img/smile32x32.png')} />
+				<ContextMenuTrigger id={toString(id)}>
+					<img src={require('../img/smile32x32.png')} />
+				</ContextMenuTrigger>
+
+				<ContextMenu id={toString(id)}>
+					<MenuItem data={{name: 'name'}} onClick={() => {alert('name!')}}>
+						Name
+					</MenuItem>
+					<MenuItem divider />
+					<MenuItem data={{}} onClick={() => {alert('properties!')}}>
+						Properties
+					</MenuItem>
+				</ContextMenu>
 			</div>
 		)
 	}

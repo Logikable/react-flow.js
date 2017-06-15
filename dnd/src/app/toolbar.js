@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Tile from './tile';
+import { NodeNames } from './constants'
 
 export default class Toolbar extends Component {
 	render() {
@@ -14,8 +15,11 @@ export default class Toolbar extends Component {
 		}
 
 		var tiles = []
-		for (var i = 0; i < 10; i += 1) {
-			tiles.push(<Tile key={i} id={i} />)
+		for (var i = 0; i < NodeNames.length; i += 1) {
+			tiles.push(<Tile
+				key={i}
+				name={NodeNames[i]}
+			/>)
 		}
 
 		return (
