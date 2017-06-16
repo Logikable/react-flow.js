@@ -1,0 +1,3 @@
+- implement selectable
+- add images for nodes
+- add properties
