@@ -9,7 +9,7 @@ require('../css/styles.css');
 
 const spec = {
 	beginDrag: function(props, monitor, component) {
-		return {left: component.state.left, top: component.state.top}
+		return {left: component.state.left, top: component.state.top, name: props.name}
 	}
 }
 
@@ -46,8 +46,8 @@ class Tile extends Component {
 		return connectDragSource(
 			<div>
 				<img
-					data-tip={ProperNames[name]}
-					src={require('../img/' + SourceFiles['tile'][name])}
+					data-tip={ ProperNames[name] }
+					src={ require('../img/' + SourceFiles['tile'][name]) }
 				/>
 				<ReactTooltip class={'tooltip'} />
 			</div>

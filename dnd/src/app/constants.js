@@ -16,7 +16,7 @@ export const NodeNames = [
 ]
 
 export const ProperNames = {
-	data_upload: 'Data Upload (xml/csv)',
+	data_upload: 'Data Upload',
 	data_cleansing: 'Data Cleansing',
 	data_processing: 'Data Processing',
 	data_join: 'Data Join',

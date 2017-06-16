@@ -14,7 +14,8 @@ const spec = {
 			const tile = monitor.getItem()
 
 			component.addNode(tile.left + delta.x - rec.left,
-				tile.top + delta.y - rec.top)
+				tile.top + delta.y - rec.top,
+				tile.name)
 		} else if (monitor.getItemType() === ItemTypes.node) {
 			const node = monitor.getItem()
 
@@ -37,46 +38,44 @@ class Editor extends Component {
 		this.state = {
 			nodes: [{
 				left: 0,
-				top: 0
+				top: 0,
+				nodeName: 'data_upload'
 			}]
 		}
 	}
 
-	addNode(left, top) {
+	addNode(left, top, nodeName) {
 		this.setState({
-			nodes: this.state.nodes.concat([{
-				left: left,
-				top: top
-			}])
+			nodes: this.state.nodes.concat([{ left, top, nodeName }])
 		})
 	}
 
 	moveNode(id, left, top) {
+		const nodeName = this.state.nodes[id].nodeName
 		var stateCopy = Object.assign({}, this.state)
 		stateCopy.nodes = stateCopy.nodes.slice()
-		stateCopy.nodes[id] = {left, top}
+		stateCopy.nodes[id] = { left, top, nodeName }
 		this.setState(stateCopy)
 	}
 
 	render() {
 		const { connectDropTarget } = this.props;
-		const style = {
-			height: '100%',
-			position: 'relative',
-			overflow: 'hidden',
-			borderColor: 'silver',
-			borderStyle: 'solid'
-		}
 
 		var nodes = []
 		for (var i = 0; i < this.state.nodes.length; i += 1) {
 			var data = this.state.nodes[i]
-			nodes.push(<Node key={i} id={i} left={data.left} top={data.top} />)
+			nodes.push(<Node key={ i } id={ i } left={ data.left } top={ data.top } nodeName={ data.nodeName } />)
 		} 
 
 		return connectDropTarget(
-			<div style={style}>
-				{nodes}
+			<div style={{
+				height: '100%',
+				position: 'relative',
+				overflow: 'hidden',
+				borderColor: 'silver',
+				borderStyle: 'solid'
+			}}>
+				{ nodes }
 			</div>
 		)
 	}

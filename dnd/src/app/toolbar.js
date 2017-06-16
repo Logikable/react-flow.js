@@ -4,27 +4,25 @@ import { NodeNames } from './constants'
 
 export default class Toolbar extends Component {
 	render() {
-		const style = {
-			width: 50,
-			height: '96%',
-			padding: '2% 0px 2% 0px',
-			float: 'left',
-			textAlign: 'center',
-			borderColor: 'silver',
-			borderStyle: 'solid'
-		}
-
 		var tiles = []
 		for (var i = 0; i < NodeNames.length; i += 1) {
 			tiles.push(<Tile
-				key={i}
-				name={NodeNames[i]}
+				key={ i }
+				name={ NodeNames[i] }
 			/>)
 		}
 
 		return (
-			<div style={style}>
-				{tiles}
+			<div style={{
+				width: 50,
+				height: '96%',
+				padding: '2% 0px 2% 0px',
+				float: 'left',
+				textAlign: 'center',
+				borderColor: 'silver',
+				borderStyle: 'solid'
+			}}>
+				{ tiles }
 			</div>
 		)
 	}
