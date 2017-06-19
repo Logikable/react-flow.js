@@ -1,6 +1,12 @@
 export const ItemTypes = {
-	tile: 'tile',
-	node: 'node'
+	tile: 'tile',		// drop tile onto editor
+	node: 'node',		// move nodes around
+	connect: 'connect'	// connect nodes
+}
+
+export const ConnectorTypes = {
+	in: 0,		// at this point our connectors are only in or out
+	out: 1
 }
 
 export const NodeNames = [

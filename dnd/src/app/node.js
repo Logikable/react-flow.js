@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { DragSource } from 'react-dnd';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
-import { ItemTypes, ProperNames } from './constants';
+import Connector from './connector';
+import { ConnectorTypes, ItemTypes, ProperNames } from './constants';
 
 require('../css/react-contextmenu.css')
 
@@ -29,14 +30,27 @@ class Node extends Component {
 	getBox() {
 		return (
 			<div style={{
-				width: 90,
+				width: 120,
 				height: 60,
 				backgroundColor: 'silver',
 				display: 'flex',
 				justifyContent: 'center',
 				alignItems: 'center'
 			}}>
+				<div style={{
+					display: 'flex',
+					alignItems: 'center'
+				}}>
+					<Connector connectorType={ ConnectorTypes.in } nodeId={ this.props.id } addConnection={ this.props.addConnection } />
+				</div>
 				{ ProperNames[this.props.nodeName] }
+				<div style={{
+					display: 'flex',
+					justifyContent: 'flex-end',
+					alignItems: 'center'
+				}}>
+					<Connector connectorType={ ConnectorTypes.out } nodeId={ this.props.id } addConnection={ this.props.addConnection } />
+				</div>
 			</div>
 		)
 	}
@@ -82,6 +96,7 @@ Node.propTypes = {
 	left: PropTypes.number.isRequired,
 	top: PropTypes.number.isRequired,
 	nodeName: PropTypes.string.isRequired,
+	addConnection: PropTypes.func.isRequired,
 	isDragging: PropTypes.bool.isRequired,
 	connectDragSource: PropTypes.func.isRequired,
 	connectDragPreview: PropTypes.func.isRequired
