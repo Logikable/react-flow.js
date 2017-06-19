@@ -42,7 +42,7 @@ class Node extends Component {
 	}
 
 	componentDidMount() {
-		const { connectDragPreview } = this.props;
+		const { connectDragPreview } = this.props
 
 		connectDragPreview(this.getBox())
 	}
@@ -56,14 +56,14 @@ class Node extends Component {
 					left: this.props.left,
 					top: this.props.top
 				}}>
-					<ContextMenuTrigger id={ toString(id) } holdToDisplay={ -1 }>
+					<ContextMenuTrigger id={ toString(id) } holdToDisplay={ -1 }>	{/* holdToDisplay makes drag and drop still work */}
 						{
 							isDragging ? null : connectDragSource(this.getBox())
 						}
 					</ContextMenuTrigger>
 				</div>
 
-				<ContextMenu id={toString(id)}>
+				<ContextMenu id={ toString(id) }>
 					<MenuItem data={{name: 'name'}} onClick={() => { alert('name!') }}>
 						Name
 					</MenuItem>

@@ -8,7 +8,7 @@ Historically, web applications would be written with a small handful of language
 
 ### HTML
 
-Previously, you probably worked with HTML 4. HTML 5 was introduced 2 years ago and was not a significant change from the old language. There are a few new tags such as <canvas>, <header>, and <footer>, but nothing substantial that has not been seen before. The major difference here is that much of web development has shifted from structuring with HTML, scripting with JS, and styling with CSS to coding much of everything with Javascript.
+Previously, you probably worked with HTML 4. HTML 5 was introduced 2 years ago and was not a significant change from the old language. There are a few new tags such as `<canvas>`, `<header>`, and `<footer>`, but nothing substantial that has not been seen before. The major difference here is that much of web development has shifted from structuring with HTML, scripting with JS, and styling with CSS to coding much of everything with Javascript.
 
 With the introduction of React, an extension of Javascript called JSX was created that allows programmers to easily include HTML in their scripts. More about this will be covered later.
 
@@ -32,7 +32,7 @@ As you may or may not know, Node.js is a backend environment that executes Javas
 
 ### Babel, transpilers, and polyfill
 
-As mentioned previously, recently Javascript has been changing at an exponential rate. Some browsers are too complex (Google Chrome) or too old (IE8,9) to properly support the new syntax, and so transpilers and polyfills are needed. A transpiler translates and compiles new syntax to older syntax (such as ES6 to ES5), and polyfills are scripts and libraries that act as browser fallbacks, implementing new functionality using older javascript that is supported. Babel is a transpiler that we will be using in this tutorial, as it will transpile newer React.js syntax and ES6 into older, browser-supported ES5.
+As mentioned previously, recently Javascript has been changing at an exponential rate. Some browsers are too complex (Google Chrome) or too old (IE8, 9) to properly support the new syntax, and so transpilers and polyfills are needed. A transpiler translates and compiles new syntax to older syntax (such as ES6 to ES5), and polyfills are scripts and libraries that act as browser fallbacks, implementing new functionality using older javascript that is supported. Babel is a transpiler that we will be using in this tutorial, as it will transpile newer React.js syntax and ES6 into older, browser-supported ES5.
 
 ### Webpack
 
