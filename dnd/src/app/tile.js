@@ -33,10 +33,10 @@ class Tile extends Component {
 		img.onload = () => connectDragPreview(img);
 
 		// figuring out where the tile is located on the screen
-		const rec = ReactDOM.findDOMNode(this).getBoundingClientRect()
+		const rect = ReactDOM.findDOMNode(this).getBoundingClientRect()
 		this.setState({
-			left: rec.left,	// + window.scrollX is not included because otherwise it would be subtracted later anyways
-			top: rec.top
+			left: rect.left,	// + window.scrollX is not included because otherwise it would be subtracted later anyways
+			top: rect.top
 		})
 	}
 

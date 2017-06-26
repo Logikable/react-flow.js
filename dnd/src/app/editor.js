@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { DropTarget } from 'react-dnd';
+import Connection from './connection';
 import { ItemTypes } from './constants';
 import Node from './node';
 
@@ -10,11 +11,11 @@ const spec = {
 		const delta = monitor.getDifferenceFromInitialOffset()
 
 		if (monitor.getItemType() === ItemTypes.tile) {
-			const rec = ReactDOM.findDOMNode(component).getBoundingClientRect()
+			const rect = ReactDOM.findDOMNode(component).getBoundingClientRect()
 			const tile = monitor.getItem()
 
-			component.addNode(tile.left + delta.x - rec.left,
-				tile.top + delta.y - rec.top,
+			component.addNode(tile.left + delta.x - rect.left,
+				tile.top + delta.y - rect.top,
 				tile.name)
 		} else if (monitor.getItemType() === ItemTypes.node) {
 			const node = monitor.getItem()
@@ -22,6 +23,20 @@ const spec = {
 			component.moveNode(node.id,
 				node.left + delta.x,
 				node.top + delta.y)
+
+			const inConnectionId = component.connectionsByNode[node.id][0]
+			const outConnectionId = component.connectionsByNode[node.id][1]
+			const connectionsCopy = JSON.parse(JSON.stringify(component.state.connections))		// deep copy
+
+			if (inConnectionId != undefined) {
+				connectionsCopy[inConnectionId].eX += delta.x
+				connectionsCopy[inConnectionId].eY += delta.y
+			}
+			if (outConnectionId != undefined) {
+				connectionsCopy[outConnectionId].sX += delta.x
+				connectionsCopy[outConnectionId].sY += delta.y
+			}
+			component.setState({ connections: connectionsCopy })
 		}
 	}
 }
@@ -35,50 +50,107 @@ function collect(connect, monitor) {
 class Editor extends Component {
 	constructor(props) {
 		super(props)
-		this.state = {
-			nextId: 1,
-			nodes: [{
-				id: 0,
-				left: 0,
-				top: 0,
-				nodeName: 'data_upload'
-			}],
-			connections: []
+
+		// non-reactive state
+		this.nextId = 1
+		this.nextConnectionId = 0
+		this.connectionsByNode = {
+			0: {}
+		}
+		// react state
+		this.state = {			// IMPORTANT: DO NOT PUT STATE VARIABLES THAT DO NOT REQUIRE RE-RENDERING IN THIS.STATE
+			nodes: {
+				0: {
+					left: 0,
+					top: 0,
+					nodeName: 'data_upload',
+				}
+			},
+			connections: {}
 		}
 	}
 
 	addNode(left, top, nodeName) {
-		const { nextId:id } = this.state 		// shorthand for setting id = this.state.nextId
+		const id = this.nextId
+
+		const copy = Object.assign({}, this.state.nodes)
+		copy[id] = { left, top, nodeName, connections: {} }
+
+		this.nextId = id + 1
+		this.connectionsByNode[id] = {}
 		this.setState({
-			nodes: this.state.nodes.concat([{ id, left, top, nodeName }]),
-			nextId: this.state.nextId + 1
+			nodes: copy,
 		})
 	}
 
 	moveNode(id, left, top) {
-		const nodeName = this.state.nodes[id].nodeName
-		var stateCopy = Object.assign({}, this.state)
-		stateCopy.nodes = stateCopy.nodes.slice()
-		stateCopy.nodes[id] = { id, left, top, nodeName }
-		this.setState(stateCopy)
+		const copy = Object.assign({}, this.state.nodes)
+		copy[id].left = left
+		copy[id].top = top
+		this.setState({
+			nodes: copy
+		})
 	}
 
-	addConnection(start, end) {
+	addConnection(id, sNodeId, sPortId, eNodeId, ePortId, sX, sY, eX, eY) {
+		const connectionsCopy = Object.assign({}, this.state.connections)
+		const rect = ReactDOM.findDOMNode(this).getBoundingClientRect()
+
+		connectionsCopy[id] = { sNodeId, sPortId, eNodeId, ePortId,
+			sX: sX - rect.left, sY: sY - rect.top, eX: eX - rect.left, eY: eY - rect.top }
+
+		this.connectionsByNode[sNodeId][sPortId] = id
+		this.connectionsByNode[eNodeId][ePortId] = id
+
 		this.setState({
-			connections: this.state.connections.concat([{ start, end }])
+			connections: connectionsCopy
 		})
-		console.log(this.state.connections)
+	}
+
+	deleteConnection(id) {
+		const copy = Object.assign({}, this.state.connections)
+		delete copy[id]
+		this.setState({
+			connections: copy
+		})
+	}
+
+	getNextConnectionId() {
+		const nextId = this.nextConnectionId
+		this.nextConnectionId = nextId + 1
+		return nextId
 	}
 
 	render() {
 		const { connectDropTarget } = this.props;
 
 		var nodes = []
-		for (var i = 0; i < this.state.nodes.length; i += 1) {
-			var data = this.state.nodes[i]
+		var i = 0
+		for (var key in this.state.nodes) {
+			const data = this.state.nodes[key]
 			nodes.push(<Node
-				key={ i } id={ data.id } left={ data.left } top={ data.top }
-				nodeName={ data.nodeName } addConnection={ this.addConnection.bind(this) } />)
+				key={ i }
+				id={ parseInt(key) }
+				left={ data.left } top={ data.top }
+				inPorts={ 1 } outPorts={ 1 }
+				nodeName={ data.nodeName }
+				addConnection={ this.addConnection.bind(this) }
+				deleteConnection={ this.deleteConnection.bind(this) }
+				getNextConnectionId={ this.getNextConnectionId.bind(this) }
+			/>)
+			i += 1
+		}
+
+		var connections = []
+		i = 0
+		for (var key in this.state.connections) {
+			const data = this.state.connections[key]
+			connections.push(<Connection
+				key={ i }
+				sX={ data.sX } sY={ data.sY }
+				eX={ data.eX } eY={ data.eY }
+			/>)
+			i += 1
 		}
 
 		return connectDropTarget(
@@ -90,6 +162,12 @@ class Editor extends Component {
 				borderStyle: 'solid'
 			}}>
 				{ nodes }
+				<svg style={{
+					height: '100%',
+					width: '100%'
+				}}>
+					{ connections }
+				</svg>
 			</div>
 		)
 	}

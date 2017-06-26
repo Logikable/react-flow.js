@@ -4,11 +4,6 @@ export const ItemTypes = {
 	connect: 'connect'	// connect nodes
 }
 
-export const ConnectorTypes = {
-	in: 0,		// at this point our connectors are only in or out
-	out: 1
-}
-
 export const NodeNames = [
 	'data_upload',
 	'data_cleansing',
