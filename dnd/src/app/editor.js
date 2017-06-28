@@ -149,6 +149,7 @@ class Editor extends Component {
 				key={ i }
 				sX={ data.sX } sY={ data.sY }
 				eX={ data.eX } eY={ data.eY }
+				height={ 60 }
 			/>)
 			i += 1
 		}
