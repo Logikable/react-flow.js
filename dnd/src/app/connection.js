@@ -61,5 +61,5 @@ Connection.propTypes = {
 	sY: PropTypes.number.isRequired,
 	eX: PropTypes.number.isRequired,	// end
 	eY: PropTypes.number.isRequired,
-	height: PropTypes.number.isRequired
+	height: PropTypes.number.isRequired			// height of a node
 }

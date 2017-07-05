@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { DragSource } from 'react-dnd';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
+import { DragSource } from 'react-dnd';
 import { Port, InPort, OutPort } from './port';
 import { ItemTypes, ProperNames } from './constants';
 
@@ -47,7 +47,8 @@ class Node extends Component {
 	}
 
 	render() {
-		const { id, addConnection, deleteConnection, getNextConnectionId, isDragging, connectDragSource, connectDragPreview } = this.props
+		const { id, addConnection, deleteConnection, getNextConnectionId,
+			isDragging, connectDragSource, connectDragPreview } = this.props
 
 		const inPort = (<InPort
 			nodeId={ this.props.id }

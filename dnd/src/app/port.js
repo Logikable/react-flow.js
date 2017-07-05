@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { DragSource, DropTarget } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import ReactDOM from 'react-dom';
 import { ItemTypes } from './constants';
 
@@ -73,11 +74,6 @@ class Port extends Component {		// Port acts as a superclass to InPort and OutPo
 		this.setState({ connectionId })
 	}
 
-	getPosition() {
-		const rect = ReactDOM.findDOMNode(this).getBoundingClientRect()
-		return { left: rect.left + 4, top: rect.top + 4 }	// 4 is a hard coded radius!
-	}
-
 	render() {
 		return (
 			<div>
@@ -88,11 +84,17 @@ class Port extends Component {		// Port acts as a superclass to InPort and OutPo
 }
 
 class OutPort extends Port {
+	getPosition() {
+		const rect = ReactDOM.findDOMNode(this).getBoundingClientRect()
+		return { left: rect.left + 12, top: rect.top + 4 }	// hard coded numbers
+	}
+
 	render() {
 		const { connectDragPreview, connectDragSource } = this.props
 
-		// temporary
-		connectDragPreview(circle())
+		connectDragPreview(getEmptyImage(), {
+			captureDraggingState: true
+		})
 
 		return connectDragSource(
 			<div>
@@ -111,6 +113,11 @@ OutPort.propTypes = {
 }
 
 class InPort extends Port {
+	getPosition() {
+		const rect = ReactDOM.findDOMNode(this).getBoundingClientRect()
+		return { left: rect.left, top: rect.top + 4 }	// hard coded numbers
+	}
+
 	render() {
 		const { connectDropTarget } = this.props
 

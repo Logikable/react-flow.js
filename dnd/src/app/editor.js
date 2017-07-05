@@ -59,6 +59,8 @@ class Editor extends Component {
 		}
 		// react state
 		this.state = {			// IMPORTANT: DO NOT PUT STATE VARIABLES THAT DO NOT REQUIRE RE-RENDERING IN THIS.STATE
+			cX: 0,			// camera location
+			cY: 0,
 			nodes: {
 				0: {
 					left: 0,
@@ -156,11 +158,13 @@ class Editor extends Component {
 
 		return connectDropTarget(
 			<div style={{
-				height: '100%',
+				height: '500px',
+				width: '500px',
 				position: 'relative',
 				overflow: 'hidden',
 				borderColor: 'silver',
-				borderStyle: 'solid'
+				borderStyle: 'solid',
+				boxSizing: 'border-box'
 			}}>
 				{ nodes }
 				<svg style={{

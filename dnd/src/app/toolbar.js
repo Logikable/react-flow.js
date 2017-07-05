@@ -14,13 +14,14 @@ export default class Toolbar extends Component {
 
 		return (
 			<div style={{
-				width: 50,
-				height: '96%',
-				padding: '2% 0px 2% 0px',
+				width: '50px',
+				height: '500px',
+				padding: '2% 0px 0px 0px',
 				float: 'left',
 				textAlign: 'center',
 				borderColor: 'silver',
-				borderStyle: 'solid'
+				borderStyle: 'solid',
+				boxSizing: 'border-box'
 			}}>
 				{ tiles }
 			</div>

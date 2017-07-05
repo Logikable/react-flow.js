@@ -1,7 +1,9 @@
 export const ItemTypes = {
 	tile: 'tile',		// drop tile onto editor
 	node: 'node',		// move nodes around
-	connect: 'connect'	// connect nodes
+	connect: 'connect',	// connect nodes
+	scroll: 'scroll',	// editor scrolling
+	select: 'select'	// selecting in editor
 }
 
 export const NodeNames = [
