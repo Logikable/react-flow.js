@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
+import { ContextMenuTrigger } from 'react-contextmenu';
 import { DragSource } from 'react-dnd';
+import { ItemTypes, MenuTypes, ProperNames } from './constants';
 import { Port, InPort, OutPort } from './port';
-import { ItemTypes, ProperNames } from './constants';
 
 require('../css/react-contextmenu.css')
 
@@ -28,7 +28,7 @@ class Node extends Component {
 	}
 
 	componentDidMount() {
-		const { connectDragPreview } = this.props
+		const { nodeName, connectDragPreview } = this.props
 
 		connectDragPreview(
 			<div style={{
@@ -40,25 +40,25 @@ class Node extends Component {
 				justifyContent: 'space-between'
 			}}>
 				<Port />
-				{ ProperNames[this.props.nodeName] }
+				{ ProperNames[nodeName] }
 				<Port />
 			</div>
 		)
 	}
 
 	render() {
-		const { id, addConnection, deleteConnection, getNextConnectionId,
+		const { id, left, top, nodeName, addConnection, deleteConnection, getNextConnectionId,
 			isDragging, connectDragSource, connectDragPreview } = this.props
 
 		const inPort = (<InPort
-			nodeId={ this.props.id }
+			nodeId={ id }
 			portId={ 0 }
 			addConnection={ addConnection }
 			deleteConnection={ deleteConnection }
 			getNextConnectionId={ getNextConnectionId }
 		/>)
 		const outPort = (<OutPort
-			nodeId={ this.props.id }
+			nodeId={ id }
 			portId={ 1 }					// out port does not need to be able to create, modify, or delete connections
 			getNextConnectionId={ getNextConnectionId }
 		/>)
@@ -73,39 +73,31 @@ class Node extends Component {
 				justifyContent: 'space-between'
 			}}>
 				{ inPort }
-				{ ProperNames[this.props.nodeName] }
+				{ ProperNames[nodeName] }
 				{ outPort }
 			</div>
 		)
 
 		const trigger = (
-			<ContextMenuTrigger id={ toString(id) } holdToDisplay={ -1 }>	{/* holdToDisplay makes drag and drop still work */}
+			<ContextMenuTrigger
+				id={ MenuTypes.node }
+				holdToDisplay={ -1 }		/* holdToDisplay makes drag and drop still work */
+				nodeId={ id }
+				collect={ props => { return props } }
+			>
 				{ isDragging ? null : connectDragSource(box) }		{/* tertiary operator */}
 			</ContextMenuTrigger>
-		)
-
-		const contextMenu = (
-			<ContextMenu id={ toString(id) }>
-				<MenuItem data={{name: 'name'}} onClick={() => { alert('name!') }}>
-					Name
-				</MenuItem>
-				<MenuItem divider />
-				<MenuItem data={{}} onClick={() => { alert('properties!') }}>
-					Properties
-				</MenuItem>
-			</ContextMenu>
 		)
 
 		return (
 			<div>
 				<div style={{
 					position: 'absolute',
-					left: this.props.left,
-					top: this.props.top
+					left: left,
+					top: top
 				}}>
 					{ trigger }
 				</div>
-				{ contextMenu }
 			</div>
 		)
 	}

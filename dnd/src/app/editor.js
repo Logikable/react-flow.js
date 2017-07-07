@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { DropTarget } from 'react-dnd';
 import Connection from './connection';
 import { ItemTypes } from './constants';
+import NodeContextMenu from './contextMenu';
 import Node from './node';
 
 const spec = {
@@ -167,6 +168,7 @@ class Editor extends Component {
 				boxSizing: 'border-box'
 			}}>
 				{ nodes }
+				<NodeContextMenu />
 				<svg style={{
 					height: '100%',
 					width: '100%'

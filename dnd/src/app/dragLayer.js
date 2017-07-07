@@ -32,7 +32,6 @@ class EditorDragLayer extends Component {
 		const { item, itemType, initialOffset, currentOffset, isDragging } = this.props
 
 		var contents = null
-		console.log(itemType)
 		if (itemType === ItemTypes.node) {
 
 		} else if (itemType === ItemTypes.connect) {

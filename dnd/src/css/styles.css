@@ -1,3 +1,7 @@
 .tooltip {
 	font-family: arial !important;
 }
+
+body {
+	font-family: monospace;
+}

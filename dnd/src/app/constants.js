@@ -6,6 +6,10 @@ export const ItemTypes = {
 	select: 'select'	// selecting in editor
 }
 
+export const MenuTypes = {
+	node: 'node'
+}
+
 export const NodeNames = [
 	'data_upload',
 	'data_cleansing',
