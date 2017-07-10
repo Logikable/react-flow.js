@@ -8,8 +8,7 @@ import { ItemTypes } from './constants';
 const dragSpec = {
 	beginDrag: function(props, monitor, component) {
 		const { nodeId, portId } = props
-		return { nodeId, portId, setConnectionId: component.setConnectionId.bind(component),
-			connectionId: component.state.connectionId, getPosition: component.getPosition.bind(component) }
+		return { nodeId, portId, connected: props.connected, getPosition: component.getPosition.bind(component) }
 	}
 }
 
@@ -23,14 +22,11 @@ function dragCollect(connect, monitor) {
 const dropSpec = {
 	drop: function(props, monitor, component) {
 		const item = monitor.getItem()
-		if (item.connectionId === component.state.connectionId && item.connectionId !== -1) {
-			return			// nothing should happen, they're already connected
+		if (props.connected) {
+			props.deleteConnection(props.nodeId, props.portId)
 		}
-		if (component.state.connectionId !== -1) {
-			props.deleteConnection(component.state.connectionId)
-		}
-		if (item.connectionId !== -1) {
-			props.deleteConnection(item.connectionId)
+		if (item.connected) {
+			props.deleteConnection(item.nodeId, item.portId)
 		}
 		
 		const nextId = props.getNextConnectionId()
@@ -39,8 +35,6 @@ const dropSpec = {
 
 		props.addConnection(nextId, item.nodeId, item.portId, props.nodeId, props.portId,
 			outPosition.left, outPosition.top, inPosition.left, inPosition.top)
-		component.setConnectionId(nextId)
-		item.setConnectionId(nextId)
 	},
 	canDrop: function(props, monitor) {
 		const item = monitor.getItem()
@@ -65,13 +59,6 @@ function circle() {
 class Port extends Component {		// Port acts as a superclass to InPort and OutPort
 	constructor(props) {			// and also acts as a template when drawing Node's dragPreview
 		super(props)
-		this.state = { connectionId: -1 }	// no connection
-	}
-
-	setConnectionId(connectionId) {
-		const { portId } = this.props
-
-		this.setState({ connectionId })
 	}
 
 	render() {
@@ -89,12 +76,16 @@ class OutPort extends Port {
 		return { left: rect.left + 12, top: rect.top + 4 }	// hard coded numbers
 	}
 
-	render() {
-		const { connectDragPreview, connectDragSource } = this.props
-
+	componentDidMount() {
+		const { connectDragPreview } = this.props
+		
 		connectDragPreview(getEmptyImage(), {
 			captureDraggingState: true
 		})
+	}
+
+	render() {
+		const { connectDragSource } = this.props
 
 		return connectDragSource(
 			<div>
@@ -107,6 +98,7 @@ class OutPort extends Port {
 OutPort.propTypes = {
 	nodeId: PropTypes.number.isRequired,
 	portId: PropTypes.number.isRequired,
+	connected: PropTypes.bool.isRequired,
 	getNextConnectionId: PropTypes.func.isRequired,
 	connectDragSource: PropTypes.func.isRequired,
 	connectDragPreview: PropTypes.func.isRequired
@@ -132,6 +124,7 @@ class InPort extends Port {
 InPort.propTypes = {
 	nodeId: PropTypes.number.isRequired,
 	portId: PropTypes.number.isRequired,
+	connected: PropTypes.bool.isRequired,
 	addConnection: PropTypes.func.isRequired,
 	deleteConnection: PropTypes.func.isRequired,
 	getNextConnectionId: PropTypes.func.isRequired,

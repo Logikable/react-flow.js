@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { DragSource } from 'react-dnd';
+import ReactDOM from 'react-dom';
 import { ItemTypes, MenuTypes, ProperNames } from './constants';
 import { Port, InPort, OutPort } from './port';
 
@@ -25,6 +26,16 @@ function collect(connect, monitor) {
 class Node extends Component {
 	constructor(props) {
 		super(props)
+
+		this._mouseUp = this._mouseUp.bind(this)		// allows function to be called from other environment frames while still being able to use 'this' keyword
+	}
+
+	_mouseUp(e) {
+		if (e.button !== 0) {		// must be a left click: 0 - left, 1 - middle, 2 - right
+			return
+		}
+		const { id, isSelected, modifySelection } = this.props
+		modifySelection(id, !isSelected)
 	}
 
 	componentDidMount() {
@@ -44,23 +55,28 @@ class Node extends Component {
 				<Port />
 			</div>
 		)
+
+		ReactDOM.findDOMNode(this).addEventListener('mouseup', this._mouseUp)		// enables nodes to be selected by clicking
 	}
 
 	render() {
-		const { id, left, top, nodeName, addConnection, deleteConnection, getNextConnectionId,
+		const { id, left, top, nodeName, isSelected,
+			connectedPorts, addConnection, deleteConnection, getNextConnectionId,
 			isDragging, connectDragSource, connectDragPreview } = this.props
 
 		const inPort = (<InPort
 			nodeId={ id }
 			portId={ 0 }
+			connected={ connectedPorts.includes('0') }			// hardcoded - assumes inPortID = 0
 			addConnection={ addConnection }
 			deleteConnection={ deleteConnection }
 			getNextConnectionId={ getNextConnectionId }
 		/>)
 		const outPort = (<OutPort
 			nodeId={ id }
-			portId={ 1 }					// out port does not need to be able to create, modify, or delete connections
-			getNextConnectionId={ getNextConnectionId }
+			portId={ 1 }
+			connected={ connectedPorts.includes('1') }			// hardcoded - assumes outPortID = 1
+			getNextConnectionId={ getNextConnectionId }				// out port does not need to be able to create, modify, or delete connections
 		/>)
 
 		const box = (
@@ -70,11 +86,15 @@ class Node extends Component {
 				backgroundColor: 'silver',
 				display: 'flex',
 				alignItems: 'center',
-				justifyContent: 'space-between'
+				justifyContent: 'space-between',
+				borderColor: 'aqua',
+				borderStyle: 'solid',
+				borderWidth: isSelected ? '1px' : '0px',
+				boxSizing: 'border-box'
 			}}>
-				{ inPort }
+				{ inPort }					{/* hardcoded - assumes there is only one inPort */}
 				{ ProperNames[nodeName] }
-				{ outPort }
+				{ outPort }					{/* hardcoded - assumes there is only one outPort */}
 			</div>
 		)
 
@@ -110,6 +130,9 @@ Node.propTypes = {
 	inPorts: PropTypes.number.isRequired,
 	outPorts: PropTypes.number.isRequired,
 	nodeName: PropTypes.string.isRequired,
+	isSelected: PropTypes.bool.isRequired,
+	modifySelection: PropTypes.func.isRequired,
+	connectedPorts: PropTypes.array.isRequired,
 	addConnection: PropTypes.func.isRequired,
 	deleteConnection: PropTypes.func.isRequired,
 	getNextConnectionId: PropTypes.func.isRequired,
