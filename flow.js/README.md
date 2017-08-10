@@ -39,7 +39,7 @@ The coding style of React is very different from that of a conventional web page
 
 Each component may contain data, and that data is usually stored in one of two of React's special structures: either it is a **prop**, or it is a **state**. Props are data passed down from the parent component, and are static in the context of the child component. Props are set by the attributes of the child component when initialized by the parent. States are data that represent, well, the component's state. It is highly recommended that only data that would require a rerender be stored in a components state. All other data should be stored as an attribute of the component.
 
-Every update to the DOM follows a simple lifecycle in React. When the page is initially loaded, the `componentWillMount()`, `render()`, and `componentDidMount()` functions will be called in that order. Each time the state is set or a prop is updated, `componentWillUpdate()`, `render()`, and `componentDidUpdate()` are called, also in that order. This image will help visualize that lifecycle: https://cdn-images-1.medium.com/max/1600/0*VoYsN6eq7I_wjVV5.png
+Every update to the DOM follows a simple lifecycle in React. When the page is initially loaded, the `componentWillMount()`, `render()`, and `componentDidMount()` functions will be called in that order. Each time the state is set or a prop is updated, `componentWillUpdate()`, `render()`, and `componentDidUpdate()` are called, also in that order. [This image](https://cdn-images-1.medium.com/max/1600/0*VoYsN6eq7I_wjVV5.png) will help visualize that lifecycle. 
 
 As a result of the significant differences between conventional Javascript and React's script, it is recommended that Babel is used to first transpile React to ES6, then ES6 to ES5. A guide for how to set up these transpilations can be found below.
 
@@ -58,3 +58,43 @@ The second use for webpack is its automatic reloading web server. `webpack-dev-s
 ### React-dnd
 
 **React-dnd** is a set of higher-order React components that streamlines the creation of drag and drop components. It is so integral to this project that it deserves its own section.
+
+The fundamental idea behind React-dnd are two higher-order classes that wrap your draggable and target components, `DragSource` and `DropTarget` respectively. Each class takes a few callback functions and options as the first set of parameters, then your wrapped component as the second set of parameters. In the most basic drag lifecycle, two functions are called: `beginDrag()` and `drop()`, both of which are examples of the callback functions passed as parameters; `beginDrag` from `DragSource`, and `drop` from `DropTarget`.
+
+React-dnd requires every drag source to have an item type. This allows the drop target to both filter out unwanted drag sources as well as identify which item is being dropped. This information is passed to both classes during initialization as parameters.
+
+It is also possible for your drag sources and drop targets to relay information about the location, distance travelled, item type, etc. to its child component. This is done through a collect function, which simply returns a dictionary that the developer can configure to have any data. The collect function is also passed as a parameter to both classes. Using the state monitoring feature, this can also be used to pass data from the drag source to the drop target.
+
+There is plenty of other functionality that will be covered later in this tutorial or can be found on the React-dnd website. For example, developers may set their own drag preview, render components in a custom dragging layer, or even change the HTML5 dnd backend to a touch based backend. React-dnd is versatile and should suit every developer's needs.
+
+## Setting up your environment
+
+Flow.js can be set up on Windows as easily as it can be set up on Linux.
+
+### Installing npm
+
+#### Windows
+
+Download node.js from the [official website](https://nodejs.org/en/). Run the installer and follow the prompts to install `npm package manager`.
+
+Once installation is complete, restart your computer. Verify Node.js and npm are installed properly by opening a command prompt and running `node -v` and `npm -v`.
+
+#### Linux (CentOS)
+
+Add the yum respository to your system:
+
+```
+yum install -y gcc-c++ make
+curl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -
+```
+
+Install node.js and npm using `yum install npm`. Verify your installation by running `node -v` and `npm -v`.
+
+### Installing Flow.js
+
+Clone this repository with the command `git clone https://github.com/Logikable/learning-react.git`. Navigate to the flow.js folder and run `npm install` to install all of the dependencies.
+You're good to go! Simply run `npm start` to start the web server.
+
+## Library tutorials
+
+## Flow.js 
