@@ -1,9 +1,8 @@
-# Flow Editor using React.js
+# Flow.js: Flow Editor using React.js
 
 ## Introduction to Technologies
 
-If you are an aspiring web developer or one that has not done web development in the last 10 years, this part of the README is for you. It will be covering the technologies that are relevant to this project, specifically HTML, Javascript, Node.js, ReactJS
-//todo
+If you are an aspiring web developer or one that has not done web development in the last 10 years, this part of the README is for you. It will be covering the technologies that are relevant to this project, specifically HTML, Javascript, Node.js, Babel, ReactJS, Webpack, and React-dnd.
 
 ### HTML5
 
@@ -96,5 +95,21 @@ Clone this repository with the command `git clone https://github.com/Logikable/l
 You're good to go! Simply run `npm start` to start the web server.
 
 ## Library tutorials
+
+This section of the guide will provide in-depth tutorials on the libraries and React components used in this project. The technologies used include: 
+
+### ReactJS
+
+### React-contextmenu
+
+### React-dnd
+
+### React-keydown
+
+### React-lightweight-tooltip
+
+### React-popup
+
+### npm
 
 ## Flow.js 
