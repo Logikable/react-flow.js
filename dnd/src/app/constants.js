@@ -2,8 +2,8 @@ export const ItemTypes = {
 	tile: 'tile',		// drop tile onto editor
 	node: 'node',		// move nodes around
 	connect: 'connect',	// connect nodes
-	scroll: 'scroll',	// editor scrolling
-	select: 'select'	// selecting in editor
+	scroll: 'scroll',	// editor scrolling - unimplemented
+	select: 'select'	// drag selecting in editor - unimplemented
 }
 
 export const MenuTypes = {
@@ -36,14 +36,14 @@ export const ProperNames = {
 
 export const SourceFiles = {
 	tile: {
-		data_upload: 'upload.png',
-		data_cleansing: 'cleansing.png',
-		data_processing: 'processing.png',
-		data_join: 'join.png',
-		data_warehouse: 'warehouse.png',
-		linear_regression: 'regression.png',
-		neural_network: 'network.png',
-		prediction: 'prediction.png',
-		billing: 'billing.png'
+		data_upload: 'uploadblue.png',
+		data_cleansing: 'cleansingblue.png',
+		data_processing: 'processingblue.png',
+		data_join: 'joinblue.png',
+		data_warehouse: 'warehouseblue.png',
+		linear_regression: 'regressionblue.png',
+		neural_network: 'networkblue.png',
+		prediction: 'predictionblue.png',
+		billing: 'billingblue.png'
 	}
 }

@@ -12,14 +12,20 @@ class NodeContextMenu extends Component {
 				<ContextMenu id={ id }> {} </ContextMenu>
 			)
 		}
-
 		return (
 			<ContextMenu id={ id }>
-				<MenuItem data={{}} onClick={() => { alert('Name!') }}>
-					{ trigger.nodeId }
+				<MenuItem data={{}} onClick={() => {}}>
+					Node ID: { trigger.nodeId }
 				</MenuItem>
 				<MenuItem divider />
-				<MenuItem data={{}} onClick={() => { Popup.alert('Properties!') }}>
+				<MenuItem data={{}} onClick={() => { Popup.alert(
+					'Node Name: ' + trigger.nodeName + '\n'
+					+ 'Node ID: ' + trigger.nodeId + '\n'
+					+ 'Left: ' + trigger.left + '\n'
+					+ 'Top: ' + trigger.top + '\n'
+					+ 'Port IDs: ' + trigger.ports + '\n'
+					+ 'Connected Ports: ' + trigger.connectedPorts)
+				}}>
 					Properties
 				</MenuItem>
 			</ContextMenu>

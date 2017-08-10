@@ -103,6 +103,11 @@ class Node extends Component {
 				id={ MenuTypes.node }
 				holdToDisplay={ -1 }		/* holdToDisplay makes drag and drop still work */
 				nodeId={ id }
+				ports={ [0, 1] }
+				nodeName={ nodeName }
+				left={ left }
+				top={ top }
+				connectedPorts={ connectedPorts }
 				collect={ props => { return props } }
 			>
 				{ isDragging ? null : connectDragSource(box) }		{/* tertiary operator */}

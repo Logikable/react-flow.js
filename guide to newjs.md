@@ -20,7 +20,7 @@ As of last year, ES7/ES2016 was released, but will not be covered in this tutori
 
 ### Node.js and npm
 
-As you may or may not know, Node.js is a backend environment that executes Javascript on the server-side while also runs a web server for you. Although its backend programming capabilities will not be discussed in this guide, npm (or Node.js Package Manager) will be integral. npm is a package manager much like apt-get and yum, except it is used for web development. The functionality it brings that we will be using in this guide is single command installation and command aliases.
+As you may know, Node.js is a backend environment that executes Javascript on the server-side while also runs a web server for you. Although its backend programming capabilities will not be discussed in this guide, npm (or Node.js Package Manager) will be integral. npm is a package manager much like apt-get and yum, except it is used for web development. The functionality it brings that we will be using in this guide is single command installation and command aliases.
 
 ### Libraries and Frameworks
 
