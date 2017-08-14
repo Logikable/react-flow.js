@@ -34,19 +34,13 @@ To standardize Javascript, a specification called **ECMAScript** (or ES) was int
 
 **ReactJS** is an npm library that aims to make creating interactive UIs smoother. It's being developed by Facebook and is used by hundreds of thousands of websites. It encourages the developer to split the website into reusable modular **components**. These components are then placed in a tree, much like the HTML DOM puts its elements into a tree. In fact, React creates a virtual DOM in Javascript that is modified every time an update occurs, and only updates the actual DOM when all rendering updates have completed.
 
-The coding style of React is very different from that of a conventional web page. Instead of having scripts scattered amongst a large array of HTML elements, each component (usually) is in a separate file, each file is primarily Javascript (with some HTML like elements we'll talk about later), and components must be imported from other files to be used. Each component is a class that extends React.Component, and must have a `render()` function that tells React what to render in the space occupied by that component.
-
-Each component may contain data, and that data is usually stored in one of two of React's special structures: either it is a **prop**, or it is a **state**. Props are data passed down from the parent component, and are static in the context of the child component. Props are set by the attributes of the child component when initialized by the parent. States are data that represent, well, the component's state. It is highly recommended that only data that would require a rerender be stored in a components state. All other data should be stored as an attribute of the component.
-
-Every update to the DOM follows a simple lifecycle in React. When the page is initially loaded, the `componentWillMount()`, `render()`, and `componentDidMount()` functions will be called in that order. Each time the state is set or a prop is updated, `componentWillUpdate()`, `render()`, and `componentDidUpdate()` are called, also in that order. [This image](https://cdn-images-1.medium.com/max/1600/0*VoYsN6eq7I_wjVV5.png) will help visualize that lifecycle. 
-
-As a result of the significant differences between conventional Javascript and React's script, it is recommended that Babel is used to first transpile React to ES6, then ES6 to ES5. A guide for how to set up these transpilations can be found below.
-
 #### JSX
 
 In order to simplify the process for native HTML elements to be passed around in Javascript, React has introduced a subset of Javascript known as **JSX**. JSX is very similar to HTML with a few exceptions: all names are camelCase instead of underscored, and instead of the `class` attribute we have `className`.
 
 JSX is used primarily in building objects to be returned in the `render()` function of a component. Syntactical specification examples can be found in the source code.
+
+Sometimes, the developer may want dynamically generated data in the DOM. JSX supports this, and will execute any code between two braces `{}` as Javascript. Of course, it is possible to infinitely layer JSX within Javascript within JSX, but there are few cases where this is actually necessary. 
 
 ### Webpack
 
@@ -58,11 +52,7 @@ The second use for webpack is its automatic reloading web server. `webpack-dev-s
 
 **React-dnd** is a set of higher-order React components that streamlines the creation of drag and drop components. It is so integral to this project that it deserves its own section.
 
-The fundamental idea behind React-dnd are two higher-order classes that wrap your draggable and target components, `DragSource` and `DropTarget` respectively. Each class takes a few callback functions and options as the first set of parameters, then your wrapped component as the second set of parameters. In the most basic drag lifecycle, two functions are called: `beginDrag()` and `drop()`, both of which are examples of the callback functions passed as parameters; `beginDrag` from `DragSource`, and `drop` from `DropTarget`.
-
-React-dnd requires every drag source to have an item type. This allows the drop target to both filter out unwanted drag sources as well as identify which item is being dropped. This information is passed to both classes during initialization as parameters.
-
-It is also possible for your drag sources and drop targets to relay information about the location, distance travelled, item type, etc. to its child component. This is done through a collect function, which simply returns a dictionary that the developer can configure to have any data. The collect function is also passed as a parameter to both classes. Using the state monitoring feature, this can also be used to pass data from the drag source to the drop target.
+In addition to being able to facilitate drag and drop actions, React-dnd gives the developer options to filter by draggable elements, cancel drops, and obtain constantly updated data about the dragged component. It allows the drag component to communicate directly with the drop component, regardless of where they live in the DOM.
 
 There is plenty of other functionality that will be covered later in this tutorial or can be found on the React-dnd website. For example, developers may set their own drag preview, render components in a custom dragging layer, or even change the HTML5 dnd backend to a touch based backend. React-dnd is versatile and should suit every developer's needs.
 
@@ -100,13 +90,51 @@ This section of the guide will provide in-depth tutorials on the libraries and R
 
 ### ReactJS
 
+The coding style of a React app is very different from that of a conventional web page. Instead of having scripts scattered amongst a large array of HTML elements, each component (usually) is in a separate file, each file is primarily Javascript and JSX, and components must be imported from other files to be used. Each component is a class that extends React.Component, and must have a `render()` function that tells React what to render in the space occupied by that component.
+
+A simple example of React code can be found in the [flow.js](https://github.com/Logikable/learning-react/blob/master/flow.js/src/app/flow.js) file in the source code.
+
+Each component may contain data, and that data is usually stored in one of two of React's special structures: either it is a **prop**, or it is a **state**. Props are data passed down from the parent component, and are static in the context of the child component. Props are set by the attributes of the child component when initialized by the parent. States are data that represent, well, the component's state. It is highly recommended that only data that would require a rerender be stored in a components state. All other data should be stored as an attribute of the component.
+
+It is possible to assert that a proptype is of a valid type during runtime. React has a PropTypes module that has a number of objects that each correspond to a different Javascript type, allowing developers to require props of a certain name and type to be passed. It is even possible to dictate the shape of a dictionary prop. 
+
+Suppose we have a `Parent` component and a `Child` component, and we want to pass the data `green: true`. To pass data from the parent to the child using props, we type `<Child green={True} />`. On the child component side, we can require that the `Child` component has a `green` attribute by writing
+
+```
+Child.propTypes = {
+	green: PropType.bool.isRequired
+}
+```
+
+Every update to the DOM follows a simple lifecycle in React. When the page is initially loaded, the `componentWillMount()`, `render()`, and `componentDidMount()` functions will be called in that order. Each time the state is set or a prop is updated, `componentWillUpdate()`, `render()`, and `componentDidUpdate()` are called, also in that order. [This image](https://cdn-images-1.medium.com/max/1600/0*VoYsN6eq7I_wjVV5.png) will help visualize that lifecycle. 
+
+As a result of the significant differences between conventional Javascript and React's script, it is recommended that Babel is used to first transpile React to ES6, then ES6 to ES5. A guide for how to set up these transpilations can be found below.
+
 ### React-contextmenu
+
+**React-contextmenu** allows the developer to easily create custom right click menus and options. The three main components are the `ContextMenuTrigger`, `ContextMenu`, and the `MenuItem`. As the name suggests, the `ContextMenuTrigger` can be placed and will detect right click activity in that region. Once the click event is triggered, React-contextmenu will look for a `ContextMenu` component with the same ID as the trigger and display it positioned appropriately. The displayed contents are determined by the `MenuItem` child components.
+
+A menu divider can be added by including a `MenuItem` component with the divider prop: `<MenuItem divider />`.
+
+By default, React-contextmenu will also display the menu on a held click. This can be disabled by giving the `ContextMenuTrigger` component the prop `holdToDisplay={-1}`.
+
+All attributes passed to the `ContextMenuTrigger` component will be bundled under one (`trigger`) and forwarded to the `ContextMenu` component.
 
 ### React-dnd
 
+The fundamental idea behind React-dnd are two higher-order classes that wrap your draggable and target components, `DragSource` and `DropTarget` respectively. Each class takes a few callback functions and options as the first set of parameters, then your wrapped component as the second set of parameters. In the most basic drag lifecycle, two functions are called: `beginDrag()` and `drop()`, both of which are examples of the callback functions passed as parameters; `beginDrag` from `DragSource`, and `drop` from `DropTarget`.
+
+React-dnd requires every drag source to have an item type. This allows the drop target to both filter out unwanted drag sources as well as identify which item is being dropped. This information is passed to both classes during initialization as parameters.
+
+It is also possible for your drag sources and drop targets to relay information about the location, distance travelled, item type, etc. to its child component. This is done through a collect function, which simply returns a dictionary that the developer can configure to have any data. The collect function is also passed as a parameter to both classes. Using the state monitoring feature, this can also be used to pass data from the drag source to the drop target.
+
 ### React-keydown
 
+**React-keydown** is a React adapter to the HTML key down event. It simply passes the event to the developer through a prop.
+
 ### React-lightweight-tooltip
+
+**React-lightweight-tooltip** enables developers to create custom tooltips when the user hovers over a component. To use React-tooltip, add the `data-tip` attribute to the elemt
 
 ### React-popup
 

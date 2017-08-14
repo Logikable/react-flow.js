@@ -9,7 +9,7 @@ require('../css/styles.css');
 
 const spec = {
 	beginDrag: function(props, monitor, component) {
-		return {left: component.state.left, top: component.state.top, name: props.name}
+		return { left: component.state.left, top: component.state.top, name: props.name }
 	}
 }
 
