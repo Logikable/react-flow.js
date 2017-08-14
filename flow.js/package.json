@@ -18,8 +18,8 @@
     "react-dnd-html5-backend": "^2.4.1",
     "react-dom": "^15.5.4",
     "react-keydown": "^1.7.4",
-    "react-lightweight-tooltip": "0.0.4",
-    "react-popup": "^0.8.0"
+    "react-popup": "^0.8.0",
+    "react-tooltip": "^3.3.0"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -28,7 +28,6 @@
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.4",
     "file-loader": "^0.11.2",
-    "react-tooltip": "^3.3.0",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "webpack": "^2.6.1",

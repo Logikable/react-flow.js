@@ -40,7 +40,7 @@ To standardize Javascript, a specification called **ECMAScript** (or ES) was int
 
 In order to simplify the process for native HTML elements to be passed around in Javascript, React has introduced a subset of Javascript known as **JSX**. JSX is very similar to HTML with a few exceptions: all names are camelCase instead of underscored, and instead of the `class` attribute we have `className`.
 
-JSX is used primarily in building objects to be returned in the `render()` function of a component. Syntactical specification examples can be found in the source code.
+JSX is used primarily in building objects to be returned in the `render()` function of a component. React permits exactly one JSX element to be returned, and all others to be children. Often this means wrapping every other element in a `<div>` tag. It is also common to wrap the entire JSX block in parentheses `()`. Other syntactical specification examples can be found in the source code. 
 
 Sometimes, the developer may want dynamically generated data in the DOM. JSX supports this, and will execute any code between two braces `{}` as Javascript. Of course, it is possible to infinitely layer JSX within Javascript within JSX, but there are few cases where this is actually necessary. 
 
@@ -94,7 +94,23 @@ Although Javascript is not a library, this section has been included to ease any
 
 #### Semicolons
 
-Semicolons are no longer necessary. Javascript is now like Python
+Semicolons are no longer necessary. Javascript is now like Python.
+
+#### Object matching
+
+It is common in ReactJS to only need a portion of a dictionary object's data. Traditionally, it would be verbose as a new object would have to be created, and each one of the required key-value pairs would have to be manually set. ES6 has introduced a shorthand notation to do everything in a single line known as **object matching**.
+
+In old Javascript, the code would be:
+```
+var tmp = some_function()
+var a = tmp.a
+var b = tmp.b
+var c = tmp.c
+```
+In ES6, we can now do:
+```
+var { a, b, c } = some_function()
+```
 
 #### Constants/block-scoped variables
 
@@ -134,22 +150,6 @@ or even
 (var_1, var_2) => var_1 + var_2
 ```
 
-#### Object matching
-
-It is common in ReactJS to only need a portion of a dictionary object's data. Traditionally, it would be verbose as a new object would have to be created, and each one of the required key-value pairs would have to be manually set. ES6 has introduced a shorthand notation to do everything in a single line.
-
-In old Javascript, the code would be:
-```
-var tmp = some_function()
-var a = tmp.a
-var b = tmp.b
-var c = tmp.c
-```
-In ES6, we can now do:
-```
-var { a, b, c } = some_function()
-```
-
 #### Import/Export
 
 Previously, to include packages in Node.js meant using the `require()` function and having an `exports` variable in the package. Now, we use `import` and `export` statements:
@@ -159,6 +159,13 @@ export function sum (x, y) { return x + y }
 export var PI = 3.14
 // imports.js
 import { sum, PI } from "exports"
+```
+It is also possible to label an export the default export. By doing so, it is no longer necessary to use [object matching](#object-matching) to specify which variables to import.
+```
+// exports.js
+export default var PI = 3.14
+// imports.js
+import PI from "exports"
 ```
 
 #### Classes
@@ -182,15 +189,13 @@ Since classes are just functions, the `this` keyword works a little different fr
 
 The coding style of a React app is very different from that of a conventional web page. Instead of having scripts scattered amongst a large array of HTML elements, each component (usually) is in a separate file, each file is primarily Javascript and JSX, and components must be imported from other files to be used. Each component is a class that extends React.Component, and must have a `render()` function that tells React what to render in the space occupied by that component.
 
-A simple example of React code can be found in the [flow.js](https://github.com/Logikable/learning-react/blob/master/flow.js/src/app/flow.js) file in the source code.
-
 Each component may contain data, and that data is usually stored in one of two of React's special structures: either it is a **prop**, or it is a **state**. Props are data passed down from the parent component, and are static in the context of the child component. Props are set by the attributes of the child component when initialized by the parent. States are data that represent, well, the component's state. It is highly recommended that only data that would require a rerender be stored in a components state. All other data should be stored as an attribute of the component.
 
-To get/set a component's props, simply use the variable `this.props` in a method of the component. As mentioned in the [object matching](#object-matching)
+To get/set a component's props, simply use the variable `this.props` in a method of the component. As mentioned in the [object matching](#object-matching) section, object matching is handy here as it is common that only a certain selection of props are necessary in each function. For example, if only the `x`, `y`, and `id` props are needed, then the following is sufficient:
 ```
-
+var { x, y, id } = this.props
 ```
-It is possible to assert that a proptype is of a valid type during runtime. React has a PropTypes module that has a number of objects that each correspond to a different Javascript type, allowing developers to require props of a certain name and type to be passed. It is even possible to dictate the shape of a dictionary prop. 
+It is possible to assert that a proptype is of a valid type during runtime. React has a PropTypes module that has a number of objects that each correspond to a different Javascript type, allowing developers to require props of a certain name and type to be passed. It is even possible to dictate the shape of a dictionary prop.
 
 Suppose we have a `Parent` component and a `Child` component, and we want to pass the data `green: true`. To pass data from the parent to the child using props, we type `<Child green={True} />`. On the child component side, we can require that the `Child` component has a `green` attribute by writing
 ```
@@ -200,7 +205,47 @@ Child.propTypes = {
 ```
 Every update to the DOM follows a simple lifecycle in React. When the page is initially loaded, the `componentWillMount()`, `render()`, and `componentDidMount()` functions will be called in that order. Each time the state is set or a prop is updated, `componentWillUpdate()`, `render()`, and `componentDidUpdate()` are called, also in that order. [This image](https://cdn-images-1.medium.com/max/1600/0*VoYsN6eq7I_wjVV5.png) will help visualize that lifecycle. 
 
+Usually components are exported at the end of a file, as it is likely that that component was created for a purpose and needs to be used elsewhere.
+
 As a result of the significant differences between conventional Javascript and React's script, it is recommended that Babel is used to first transpile React to ES6, then ES6 to ES5. A guide for how to set up these transpilations can be found above.
+
+#### Sample code
+
+A simple example of React code can be found in the [flow.js](https://github.com/Logikable/learning-react/blob/master/flow.js/src/app/flow.js) file in the source code. For your convenience, it is also shown here:
+```
+import React, { Component } from 'react';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import Popup from 'react-popup';
+import EditorDragLayer from './dragLayer';
+import Editor from './editor';
+import Toolbar from './toolbar';
+
+require('../css/popup.css')
+
+class Flow extends Component {
+	render() {
+		return (
+			<div style={{
+				width: '550px',
+				height: '500px'
+			}}>
+				<Popup />
+				<Toolbar />
+				<Editor />
+				<EditorDragLayer /> 
+			</div>
+		)
+	}
+}
+
+export default DragDropContext(HTML5Backend)(Flow);
+```
+Much of the detail can be ignored here, but the key features to point out are:
+
+1. Components defined by creating a class that extends the React `Component` class, which was imported from the 'react' package.
+2. There is only a `render()` method, and it returns a bit of JSX that is simply defined by a size and includes a few other components.
+3. The component is exported as the default export, which means it can be imported using `import Flow from 'flow'`.
 
 ### React-contextmenu
 
@@ -212,6 +257,26 @@ By default, React-contextmenu will also display the menu on a held click. This c
 
 All attributes passed to the `ContextMenuTrigger` component will be bundled under one (`trigger`) and forwarded to the `ContextMenu` component.
 
+#### Sample code
+
+This snippet of code creates a basic context menu that only has one item in it. It opens the menu when the component is right clicked.
+```
+import React, { Component } from 'react'
+import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu'
+
+class ContextMenuDemo extends Component {
+	render() {
+		return (
+			<ContextMenuTrigger id={0} holdToDisplay={-1}>
+				<ContextMenu id={0}>
+					<MenuItem>Item 1</MenuItem>
+				</ContextMenu>
+			</ContextMenuTrigger>
+		)
+	}
+}
+```
+
 ### React-dnd
 
 The fundamental idea behind React-dnd are two higher-order classes that wrap your draggable and target components, `DragSource` and `DropTarget` respectively. Each class takes a few callback functions and options as the first set of parameters, then your wrapped component as the second set of parameters. In the most basic drag lifecycle, two functions are called: `beginDrag()` and `drop()`, both of which are examples of the callback functions passed as parameters; `beginDrag` from `DragSource`, and `drop` from `DropTarget`.
@@ -220,13 +285,51 @@ React-dnd requires every drag source to have an item type. This allows the drop 
 
 It is also possible for your drag sources and drop targets to relay information about the location, distance travelled, item type, etc. to its child component. This is done through a collect function, which simply returns a dictionary that the developer can configure to have any data. The collect function is also passed as a parameter to both classes. Using the state monitoring feature, this can also be used to pass data from the drag source to the drop target.
 
+
+
 ### React-keydown
 
-**React-keydown** is a React adapter to the HTML key down event. It simply passes the event to the developer through a prop.
+**React-keydown** is a React adapter to the HTML key down event. It simply passes the event to the developer through a prop. The package includes a `keydown` function, which takes your React component as a parameter and wraps it, allowing it to pass through props.
 
-### React-lightweight-tooltip
+#### Sample code
 
-**React-lightweight-tooltip** enables developers to create custom tooltips when the user hovers over a component. To use React-tooltip, add the `data-tip` attribute to the elemt
+This snippet of code simply creates a component that prints out the keycode every time a key is pressed.
+```
+import React, { Component } from 'react'
+import keydown from 'react-keydown'
+
+class KeydownDemo extends Component {
+	componentWillReceiveProps(nextProps) {
+		const { keydown: { event } } = nextProps
+		console.log(event.which)	// key code representing which key was pressed
+	}
+	render() { return; }
+}
+export default keydown(KeydownDemo)
+```
+
+### React-tooltip
+
+**React-tooltip** enables developers to create custom tooltips when the user hovers over a component. To use react-tooltip, add the `data-tip` attribute to the element that needs to display a tooltip when hovered over, and 
+
+#### Sample code
+
+This snippet of code creates a component that contains the word "Hello", and will display a tooltip with the text "World!" when hovered over.
+```
+import React, { Component } from 'react'
+import ReactTooltip from 'react-tooltip'
+
+class TooltipDemo extends Component {
+	render() {
+		return (
+			<div data-tip={ "World!" }>
+				Hello
+				<ReactTooltip />
+			</div>
+		)
+	}
+}
+```
 
 ### React-popup
 

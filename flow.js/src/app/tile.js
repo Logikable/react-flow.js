@@ -49,7 +49,7 @@ class Tile extends Component {
 					data-tip={ ProperNames[name] }
 					src={ require('../img/' + SourceFiles['tile'][name]) }
 				/>
-				<ReactTooltip class={'tooltip'} />
+				<ReactTooltip class={'tooltip'} />			{/* class is used to display custom CSS */}
 			</div>
 		)
 	}
