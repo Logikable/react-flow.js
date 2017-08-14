@@ -1,4 +1,4 @@
-# Flow.js: Flow Editor using React.js
+# Flow.js: Flow Editor using ReactJS
 
 ## Introduction to Technologies
 
@@ -17,6 +17,8 @@ When a web page is loaded, the browser creates a Document Object Model (or **DOM
 ### Javascript
 
 **Javascript** is the primary scripting language used by web developers. By default, all web browsers have a Javascript engine that parses, compiles, and executes the code within a web page as it is loaded. As a result, it was mostly used as a client-side language in the past. However, recently it has seen use in backend systems, most noteably Node.js. Its syntax is most similar to that of Python.
+
+In Javascript, all objects are **dictionaries**. What this means is that classes, arrays, and other non-primitive data is represented as a dictionary. For those unaware, dictionaries are a set of key-value pairs, where values attached to an object can be both gotten and setted using its key.
 
 #### ECMAScript
 
@@ -71,12 +73,10 @@ Once installation is complete, restart your computer. Verify Node.js and npm are
 #### Linux (CentOS)
 
 Add the yum respository to your system:
-
 ```
 yum install -y gcc-c++ make
 curl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -
 ```
-
 Install node.js and npm using `yum install npm`. Verify your installation by running `node -v` and `npm -v`.
 
 ### Installing Flow.js
@@ -86,7 +86,97 @@ You're good to go! Simply run `npm start` to start the web server.
 
 ## Library tutorials
 
-This section of the guide will provide in-depth tutorials on the libraries and React components used in this project. The technologies used include: 
+This section of the guide will provide in-depth tutorials on the libraries and React components used in this project. The technologies used include: ReactJS, React-contextmenu, React-dnd, React-keydown, React-lightweight-tooltip, and React-popup. Sample code snippets demonstrating the library can be found at the bottom of each section.
+
+### Javascript/ES6
+
+Although Javascript is not a library, this section has been included to ease any new or returning web developers into the modern web dev syntax. This section will focus on the changes from ES5 (2009) to ES6 (2015) that are relevant to this project.
+
+#### Semicolons
+
+Semicolons are no longer necessary. Javascript is now like Python
+
+#### Constants/block-scoped variables
+
+Instead of `var` being the only way to define a new variable, we now have `const` and `let`. `const` is equivalent to the keyword `final` in Java, making a variable immutable. `let` makes a variable only accessible in its current scope, and should generally be used instead of `var`.
+```
+var x = 0
+const PI = 3.14
+let g = 9.8
+```
+
+#### Arrow/lambda functions
+
+Traditionally (such as in C or Java <1.7), functions had to be defined using a certain syntax:
+
+```
+return_type function_name(type_1 var_1, type_2 var_2...) {
+	// code
+	return variable
+}
+```
+or in Javascript, using the syntax:
+```
+function function_name(var_1, var_2...) {
+	// code
+	return variable
+}
+```
+Since Javascript is an event driven language, it makes sense to have callback functions. To ease the process of creating a function and passing it through as a variable, Javascript has introduced **arrow/lambda functions**. They are unique in that arrow functions do not have a name, and also do not require a return statement. If and only if the body of the function is a single expression (e.g. `v + 1`), that is the value that is returned.
+```
+(var_1, var_2) => {
+	// code
+	return variable
+}
+```
+or even
+```
+(var_1, var_2) => var_1 + var_2
+```
+
+#### Object matching
+
+It is common in ReactJS to only need a portion of a dictionary object's data. Traditionally, it would be verbose as a new object would have to be created, and each one of the required key-value pairs would have to be manually set. ES6 has introduced a shorthand notation to do everything in a single line.
+
+In old Javascript, the code would be:
+```
+var tmp = some_function()
+var a = tmp.a
+var b = tmp.b
+var c = tmp.c
+```
+In ES6, we can now do:
+```
+var { a, b, c } = some_function()
+```
+
+#### Import/Export
+
+Previously, to include packages in Node.js meant using the `require()` function and having an `exports` variable in the package. Now, we use `import` and `export` statements:
+```
+// exports.js
+export function sum (x, y) { return x + y }
+export var PI = 3.14
+// imports.js
+import { sum, PI } from "exports"
+```
+
+#### Classes
+
+**Classes** are a staple of any object-oriented programming (OOP) language. They are defined very similarly to Java/Python classes. However, since ES6 needs to be able to be transpiled into ES5, and ES5 has no equivalent, they are transpiled as functions.
+```
+class Shape {
+	constructor (id, x, y) {
+		this.id = id
+		this.move(x, y)
+	}
+	move (x, y) {
+		this.x = x
+		this.y = y
+	}
+}
+```
+Since classes are just functions, the `this` keyword works a little different from how it does in other languages with native class support. While getting/setting instance variables is still very much the same (`this.id = id`), functions themselves are now just another variable as a part of the very large object that is your class. As a result, they must also be accessed using the `this` keyword.
 
 ### ReactJS
 
@@ -96,19 +186,21 @@ A simple example of React code can be found in the [flow.js](https://github.com/
 
 Each component may contain data, and that data is usually stored in one of two of React's special structures: either it is a **prop**, or it is a **state**. Props are data passed down from the parent component, and are static in the context of the child component. Props are set by the attributes of the child component when initialized by the parent. States are data that represent, well, the component's state. It is highly recommended that only data that would require a rerender be stored in a components state. All other data should be stored as an attribute of the component.
 
+To get/set a component's props, simply use the variable `this.props` in a method of the component. As mentioned in the [object matching](#object-matching)
+```
+
+```
 It is possible to assert that a proptype is of a valid type during runtime. React has a PropTypes module that has a number of objects that each correspond to a different Javascript type, allowing developers to require props of a certain name and type to be passed. It is even possible to dictate the shape of a dictionary prop. 
 
 Suppose we have a `Parent` component and a `Child` component, and we want to pass the data `green: true`. To pass data from the parent to the child using props, we type `<Child green={True} />`. On the child component side, we can require that the `Child` component has a `green` attribute by writing
-
 ```
 Child.propTypes = {
 	green: PropType.bool.isRequired
 }
 ```
-
 Every update to the DOM follows a simple lifecycle in React. When the page is initially loaded, the `componentWillMount()`, `render()`, and `componentDidMount()` functions will be called in that order. Each time the state is set or a prop is updated, `componentWillUpdate()`, `render()`, and `componentDidUpdate()` are called, also in that order. [This image](https://cdn-images-1.medium.com/max/1600/0*VoYsN6eq7I_wjVV5.png) will help visualize that lifecycle. 
 
-As a result of the significant differences between conventional Javascript and React's script, it is recommended that Babel is used to first transpile React to ES6, then ES6 to ES5. A guide for how to set up these transpilations can be found below.
+As a result of the significant differences between conventional Javascript and React's script, it is recommended that Babel is used to first transpile React to ES6, then ES6 to ES5. A guide for how to set up these transpilations can be found above.
 
 ### React-contextmenu
 
