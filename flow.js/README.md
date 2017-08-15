@@ -1,6 +1,27 @@
 # Flow.js: Flow Editor using ReactJS
 
-## Introduction to Technologies
+## 0. Table of Contents
+
+1. [Introduction to Technologies](#Introduction-to-Technologies)
+  * [HTML5](#HTML5)
+    * [HTML DOM](#HTML-DOM)
+  * [Javascript](#Javascript)
+  * [ECMAScript](#ECMAScript)
+  * [Node.js](#Node.js)
+  * [Babel and transpilers](#Babel-and-transpilers)
+  * [ReactJS](#ReactJS)
+    * [JSX](#JSX)
+  * [Webpack](#Webpack)
+  * [React-dnd](#React-dnd)
+2. [Setting up your environment](#Setting-up-your-environment)
+  * [Installing npm](#Installing-npm)
+    * [Windows](#Windows)
+    * [Linux (CentOS)](#Linux-(CentOS))
+  * [Installing flow.js](#Installing-flow.js)
+3. [Library/Technology tutorials](#Library-Technology-tutorials)
+  * [Javascript/ES6](#Javascript-ES6)
+
+## 1. Introduction to Technologies
 
 If you are an aspiring web developer or one that has not done web development in the last 10 years, this part of the README is for you. It will be covering the technologies that are relevant to this project, specifically HTML, Javascript, Node.js, Babel, ReactJS, Webpack, and React-dnd.
 
@@ -58,7 +79,7 @@ In addition to being able to facilitate drag and drop actions, React-dnd gives t
 
 There is plenty of other functionality that will be covered later in this tutorial or can be found on the React-dnd website. For example, developers may set their own drag preview, render components in a custom dragging layer, or even change the HTML5 dnd backend to a touch based backend. React-dnd is versatile and should suit every developer's needs.
 
-## Setting up your environment
+## 2. Setting up your environment
 
 Flow.js can be set up on Windows as easily as it can be set up on Linux.
 
@@ -84,9 +105,9 @@ Install node.js and npm using `yum install npm`. Verify your installation by run
 Clone this repository with the command `git clone https://github.com/Logikable/learning-react.git`. Navigate to the flow.js folder and run `npm install` to install all of the dependencies.
 You're good to go! Simply run `npm start` to start the web server.
 
-## Library tutorials
+## 3. Library/Technology tutorials
 
-This section of the guide will provide in-depth tutorials on the libraries and React components used in this project. The technologies used include: ReactJS, React-contextmenu, React-dnd, React-keydown, React-lightweight-tooltip, and React-popup. Sample code snippets demonstrating the library can be found at the bottom of each section.
+This section of the guide will provide in-depth tutorials on the technologies and React components used in this project. Specifically, this section will cover recent changes to Javascript and contains an introduction to npm. The components mentioned are ReactJS, React-contextmenu, React-dnd, React-keydown, React-lightweight-tooltip, and React-popup. Sample code snippets demonstrating the library can be found at the bottom of each section.
 
 ### Javascript/ES6
 
@@ -184,6 +205,10 @@ class Shape {
 }
 ```
 Since classes are just functions, the `this` keyword works a little different from how it does in other languages with native class support. While getting/setting instance variables is still very much the same (`this.id = id`), functions themselves are now just another variable as a part of the very large object that is your class. As a result, they must also be accessed using the `this` keyword.
+
+### npm
+
+
 
 ### ReactJS
 
@@ -308,6 +333,29 @@ class KeydownDemo extends Component {
 export default keydown(KeydownDemo)
 ```
 
+### React-popup
+
+**React-popup** streamlines the process of creating popup boxes on demand. Simply include the `Popup` component anywhere in the React DOM tree and then run `Popup.alert(message)` whenever a popup is needed.
+
+#### Sample code
+
+This snippet of code will create a popup saying "Hello World!" once the web page has loaded.
+```
+import React, { Component } from 'react'
+import Popup from 'react-popup'
+
+class PopupDemo extends Component {
+	render() {
+		return (
+			<div>
+				<Popup />
+				{ Popup.alert("Hello World!") }
+			</div>
+		)
+	}
+}
+```
+
 ### React-tooltip
 
 **React-tooltip** enables developers to create custom tooltips when the user hovers over a component. To use react-tooltip, add the `data-tip` attribute to the element that needs to display a tooltip when hovered over, and 
@@ -331,8 +379,6 @@ class TooltipDemo extends Component {
 }
 ```
 
-### React-popup
+## 4. Flow.js 
 
-### npm
-
-## Flow.js 
+The fourth and final section 
