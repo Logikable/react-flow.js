@@ -148,22 +148,22 @@ Traditionally (such as in C or Java <1.7), functions had to be defined using a c
 
 ```
 return_type function_name(type_1 var_1, type_2 var_2...) {
-	// code
-	return variable
+    // code
+    return variable
 }
 ```
 or in Javascript, using the syntax:
 ```
 function function_name(var_1, var_2...) {
-	// code
-	return variable
+    // code
+    return variable
 }
 ```
 Since Javascript is an event driven language, it makes sense to have callback functions. To ease the process of creating a function and passing it through as a variable, Javascript has introduced **arrow/lambda functions**. They are unique in that arrow functions do not have a name, and also do not require a return statement. If and only if the body of the function is a single expression (e.g. `v + 1`), that is the value that is returned.
 ```
 (var_1, var_2) => {
-	// code
-	return variable
+    // code
+    return variable
 }
 ```
 or even
@@ -194,14 +194,14 @@ import PI from "exports"
 **Classes** are a staple of any object-oriented programming (OOP) language. They are defined very similarly to Java/Python classes. However, since ES6 needs to be able to be transpiled into ES5, and ES5 has no equivalent, they are transpiled as functions.
 ```
 class Shape {
-	constructor (id, x, y) {
-		this.id = id
-		this.move(x, y)
-	}
-	move (x, y) {
-		this.x = x
-		this.y = y
-	}
+    constructor (id, x, y) {
+        this.id = id
+        this.move(x, y)
+    }
+    move (x, y) {
+        this.x = x
+        this.y = y
+    }
 }
 ```
 Since classes are just functions, the `this` keyword works a little different from how it does in other languages with native class support. While getting/setting instance variables is still very much the same (`this.id = id`), functions themselves are now just another variable as a part of the very large object that is your class. As a result, they must also be accessed using the `this` keyword.
@@ -225,7 +225,7 @@ It is possible to assert that a proptype is of a valid type during runtime. Reac
 Suppose we have a `Parent` component and a `Child` component, and we want to pass the data `green: true`. To pass data from the parent to the child using props, we type `<Child green={True} />`. On the child component side, we can require that the `Child` component has a `green` attribute by writing
 ```
 Child.propTypes = {
-	green: PropType.bool.isRequired
+    green: PropType.bool.isRequired
 }
 ```
 Every update to the DOM follows a simple lifecycle in React. When the page is initially loaded, the `componentWillMount()`, `render()`, and `componentDidMount()` functions will be called in that order. Each time the state is set or a prop is updated, `componentWillUpdate()`, `render()`, and `componentDidUpdate()` are called, also in that order. [This image](https://cdn-images-1.medium.com/max/1600/0*VoYsN6eq7I_wjVV5.png) will help visualize that lifecycle. 
@@ -249,19 +249,19 @@ import Toolbar from './toolbar';
 require('../css/popup.css')
 
 class Flow extends Component {
-	render() {
-		return (
-			<div style={{
-				width: '550px',
-				height: '500px'
-			}}>
-				<Popup />
-				<Toolbar />
-				<Editor />
-				<EditorDragLayer /> 
-			</div>
-		)
-	}
+    render() {
+        return (
+            <div style={{
+                width: '550px',
+                height: '500px'
+            }}>
+                <Popup />
+                <Toolbar />
+                <Editor />
+                <EditorDragLayer /> 
+            </div>
+        )
+    }
 }
 
 export default DragDropContext(HTML5Backend)(Flow);
@@ -290,15 +290,15 @@ import React, { Component } from 'react'
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu'
 
 class ContextMenuDemo extends Component {
-	render() {
-		return (
-			<ContextMenuTrigger id={0} holdToDisplay={-1}>
-				<ContextMenu id={0}>
-					<MenuItem>Item 1</MenuItem>
-				</ContextMenu>
-			</ContextMenuTrigger>
-		)
-	}
+    render() {
+        return (
+            <ContextMenuTrigger id={0} holdToDisplay={-1}>
+                <ContextMenu id={0}>
+                    <MenuItem>Item 1</MenuItem>
+                </ContextMenu>
+            </ContextMenuTrigger>
+        )
+    }
 }
 ```
 
@@ -324,11 +324,11 @@ import React, { Component } from 'react'
 import keydown from 'react-keydown'
 
 class KeydownDemo extends Component {
-	componentWillReceiveProps(nextProps) {
-		const { keydown: { event } } = nextProps
-		console.log(event.which)	// key code representing which key was pressed
-	}
-	render() { return; }
+    componentWillReceiveProps(nextProps) {
+        const { keydown: { event } } = nextProps
+        console.log(event.which)    // key code representing which key was pressed
+    }
+    render() { return; }
 }
 export default keydown(KeydownDemo)
 ```
@@ -345,14 +345,14 @@ import React, { Component } from 'react'
 import Popup from 'react-popup'
 
 class PopupDemo extends Component {
-	render() {
-		return (
-			<div>
-				<Popup />
-				{ Popup.alert("Hello World!") }
-			</div>
-		)
-	}
+    render() {
+        return (
+            <div>
+                <Popup />
+                { Popup.alert("Hello World!") }
+            </div>
+        )
+    }
 }
 ```
 
@@ -368,14 +368,14 @@ import React, { Component } from 'react'
 import ReactTooltip from 'react-tooltip'
 
 class TooltipDemo extends Component {
-	render() {
-		return (
-			<div data-tip={ "World!" }>
-				Hello
-				<ReactTooltip />
-			</div>
-		)
-	}
+    render() {
+        return (
+            <div data-tip={ "World!" }>
+                Hello
+                <ReactTooltip />
+            </div>
+        )
+    }
 }
 ```
 
