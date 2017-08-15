@@ -208,7 +208,11 @@ Since classes are just functions, the `this` keyword works a little different fr
 
 ### npm
 
+npm, as is the case with all good package managers, is fast and simple to use. npm splits package installations into two types: regular dependencies and dev-dependencies. Regular dependencies are necessary to the project and will be bundled  if you so choose to release your project publicly on npm, while dev-dependencies are only necessary to your development environment. For example, babel is a dev-dependency since all transpilations occur during development, while React is a regular dependency since it is needed during runtime.
 
+npm stores all the information about which dependencies are necessary for your project in the `package.json` file. `package.json` also contains the project name, version, main file, and any scripts you may need. Scripts can be executed using `npm script_name`. For example, this project has the script `build`, which simply runs webpack and sets up automatic reloading.
+
+To download new packages, run `npm install package_name`. All dependencies will be automatically installed. If you want to automatically add the package to your dependencies list, add the `--save` flag. The `--save-dev` command will add the dependency to dev-dependencies instead.
 
 ### ReactJS
 
@@ -310,7 +314,36 @@ React-dnd requires every drag source to have an item type. This allows the drop 
 
 It is also possible for your drag sources and drop targets to relay information about the location, distance travelled, item type, etc. to its child component. This is done through a collect function, which simply returns a dictionary that the developer can configure to have any data. The collect function is also passed as a parameter to both classes. Using the state monitoring feature, this can also be used to pass data from the drag source to the drop target.
 
+#### Sample code
 
+Suppose we have the component classes `DragDemo` and `DropDemo`. To make it possible to drag one onto the other, we write:
+```
+// DragDemo.js
+import { DragSource } from 'react-dnd'
+const spec = {
+    beginDrag: function(props, monitor, component) {
+        console.log("dragging!")
+        return { name: "DragDemo" }
+    }
+}
+export default DragSource("demo", spec, (connect, monitor) => { })(DragDemo)
+```
+Note that we use [arrow functions](#arrowlambda-functions) here.
+```
+// DropDemo.js
+import { DropTarget } from 'react-dnd'
+const spec = {
+    drop: function(props, monitor, component) {
+        console.log("dropped!")
+    }
+}
+export default DropTarget("demo", spec, (connect, monitor) => { connectDragSource: connect.dragSource() })(DropDemo)
+```
+Notice the three parameters of both the `DragSource` and `DropTarget` functions. The first represents the item type - this can be an array for `DropTarget` to allow multiple drag sources to be dropped.
+
+The second is the `spec` variable, which is an object containing specification methods that will automatically be called as certain events occur. For example, the `beginDrag()` method is called once the dragging begins. The returned value must be a Javascript object that provides information about the dragged object to an eventual drop target. See [here](https://react-dnd.github.io/react-dnd/docs-overview.html) for more details.
+
+The third is the collect function - it supplies some information about the current drag event, allows the developer to connect to the React-dnd event handlers, and the return value will be an object that allows the developer to inject props into their component, connecting React-dnd to the component. In this case, for the drop target, we're passing on the object that is returned by the source's `beginDrag()` method - specifically, `{ name: "DragDemo" }`.
 
 ### React-keydown
 
