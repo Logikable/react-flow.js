@@ -1,6 +1,6 @@
 # Flow.js: Flow Editor using ReactJS
 
-## 0. Table of Contents
+## Table of Contents
 
 1. [Introduction to Technologies](#1-introduction-to-technologies)
    * [HTML5](#html5)
@@ -20,6 +20,23 @@
    * [Installing flow.js](#installing-flowjs)
 3. [Library/Technology tutorials](#3-librarytechnology-tutorials)
    * [Javascript/ES6](#javascriptes6)
+     * [Semicolons](#semicolons)
+     * [Object matching](#object-matching)
+     * [Constants/block-scoped variables](#constantsblock-scoped-variables)
+     * [Arrow/lambda functions](#arrowlambda-functions)
+     * [Import/Export](#importexport)
+     * [Classes](#classes)
+   * [npm](#npm)
+   * [ReactJS](#reactjs-tutorial)
+     * [Props](#props)
+     * [States](#states)
+     * [Other specifications](#other-specifications)
+   * [React-contextmenu](#react-contextmenu)
+   * [React-dnd](#react-dnd)
+   * [React-keydown](#react-keydown)
+   * [React-popup](#react-popup)
+   * [React-tooltip](#react-tooltip)
+4. [Flow.js](#flowjs)
 
 ## 1. Introduction to Technologies
 
@@ -214,17 +231,19 @@ npm stores all the information about which dependencies are necessary for your p
 
 To download new packages, run `npm install package_name`. All dependencies will be automatically installed. If you want to automatically add the package to your dependencies list, add the `--save` flag. The `--save-dev` command will add the dependency to dev-dependencies instead.
 
-### ReactJS
+### ReactJS Tutorial
 
 The coding style of a React app is very different from that of a conventional web page. Instead of having scripts scattered amongst a large array of HTML elements, each component (usually) is in a separate file, each file is primarily Javascript and JSX, and components must be imported from other files to be used. Each component is a class that extends React.Component, and must have a `render()` function that tells React what to render in the space occupied by that component.
 
 Each component may contain data, and that data is usually stored in one of two of React's special structures: either it is a **prop**, or it is a **state**. Props are data passed down from the parent component, and are static in the context of the child component. Props are set by the attributes of the child component when initialized by the parent. States are data that represent, well, the component's state. It is highly recommended that only data that would require a rerender be stored in a components state. All other data should be stored as an attribute of the component.
 
+#### Props
+
 To get/set a component's props, simply use the variable `this.props` in a method of the component. As mentioned in the [object matching](#object-matching) section, object matching is handy here as it is common that only a certain selection of props are necessary in each function. For example, if only the `x`, `y`, and `id` props are needed, then the following is sufficient:
 ```
 var { x, y, id } = this.props
 ```
-It is possible to assert that a proptype is of a valid type during runtime. React has a PropTypes module that has a number of objects that each correspond to a different Javascript type, allowing developers to require props of a certain name and type to be passed. It is even possible to dictate the shape of a dictionary prop.
+It is possible to assert that a proptype is of a valid type during runtime. React has a PropTypes module that has a number of objects that each correspond to a different Javascript type, allowing developers to require props of a certain name and type to be passed. It is even possible to dictate the shape of a dictionary prop. However, this is all unnecessary if you are working on a smaller project and can manually keep track of which props are being passed. It is merely optional to ensure the presence of props.
 
 Suppose we have a `Parent` component and a `Child` component, and we want to pass the data `green: true`. To pass data from the parent to the child using props, we type `<Child green={True} />`. On the child component side, we can require that the `Child` component has a `green` attribute by writing
 ```
@@ -232,6 +251,22 @@ Child.propTypes = {
     green: PropType.bool.isRequired
 }
 ```
+
+#### States
+
+States can be retrieved by accessing the `this.state` instance variable, and is a dictionary containing the state data. It can be updated using the `this.setState(newState)` method, which will internally mark the component as dirty, meaning it requires rerendering. This means that every call to `this.setState()` will rerender the entire component and children, so it should be used only when necessary.
+
+Suppose we have a component whose state has a list of `ids` and tracks the next available ID as `nextId`. To add a new id, we might do:
+```
+this.setState({
+    ids: this.state.ids.concat([this.state.nextId]),
+    nextId: this.state.nextId + 1
+})
+```
+This means that we are creating an entirely new array with the `nextId` appended onto it, and replacing the `ids` variable. It is possible to tell React to append an item to the list, but it is somewhat difficult and should only be used when efficiency is a concern.
+
+#### Other specifications
+
 Every update to the DOM follows a simple lifecycle in React. When the page is initially loaded, the `componentWillMount()`, `render()`, and `componentDidMount()` functions will be called in that order. Each time the state is set or a prop is updated, `componentWillUpdate()`, `render()`, and `componentDidUpdate()` are called, also in that order. [This image](https://cdn-images-1.medium.com/max/1600/0*VoYsN6eq7I_wjVV5.png) will help visualize that lifecycle. 
 
 Usually components are exported at the end of a file, as it is likely that that component was created for a purpose and needs to be used elsewhere.
@@ -284,7 +319,7 @@ A menu divider can be added by including a `MenuItem` component with the divider
 
 By default, React-contextmenu will also display the menu on a held click. This can be disabled by giving the `ContextMenuTrigger` component the prop `holdToDisplay={-1}`.
 
-All attributes passed to the `ContextMenuTrigger` component will be bundled under one (`trigger`) and forwarded to the `ContextMenu` component.
+All attributes passed to the `ContextMenuTrigger` component will be bundled under one (`trigger`) and forwarded to another component (perhaps containing the `ContextMenu` object) if necessary. To do so, import the `connectMenu()` function from `react-contextmenu`. This function is a higher-order function whose first set of parameters is just the identifier used by your contextmenu. The second function call is simply the class you want the data forwarded to.
 
 #### Sample code
 
@@ -296,14 +331,28 @@ import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu'
 class ContextMenuDemo extends Component {
     render() {
         return (
-            <ContextMenuTrigger id={0} holdToDisplay={-1}>
-                <ContextMenu id={0}>
-                    <MenuItem>Item 1</MenuItem>
-                </ContextMenu>
+            <ContextMenuTrigger id={0} holdToDisplay={-1} green={true}>
+                Trigger
             </ContextMenuTrigger>
+            <ContextMenu id={0}>
+                <MenuItem>Item 1</MenuItem>
+            </ContextMenu>
         )
     }
 }
+```
+If another component needed data from the trigger (say, the variable `green` from above), we can do:
+```
+import React, { Component } from 'react'
+import { connectMenu } from 'react-contextmenu'
+
+class ConnectedComponent extends Component {
+    render() {
+        const { green } = this.props
+        // code
+    }
+}
+export default connectMenu(0)(ConnectedComponent)
 ```
 
 ### React-dnd
@@ -313,6 +362,10 @@ The fundamental idea behind React-dnd are two higher-order classes that wrap you
 React-dnd requires every drag source to have an item type. This allows the drop target to both filter out unwanted drag sources as well as identify which item is being dropped. This information is passed to both classes during initialization as parameters.
 
 It is also possible for your drag sources and drop targets to relay information about the location, distance travelled, item type, etc. to its child component. This is done through a collect function, which simply returns a dictionary that the developer can configure to have any data. The collect function is also passed as a parameter to both classes. Using the state monitoring feature, this can also be used to pass data from the drag source to the drop target.
+
+A good example of data that is regularly passed through the collect function is the `dropTarget()` and `dragSource()` functions, attributes of the `connect` objects passed to the collect function. These functions allow the developer to register a JSX element to be either the drop target or the drag source. Examples can be found in any file that has a drag or drop component.
+
+React-dnd also supports custom drag layers, which allow the developer to change the drag preview or behaviour **after** the drag has begun. The react-dnd documentation has an example where dragged objects automatically snap to a grid as they are being dragged, and Flow.js uses it to display a constantly updating drag preview.
 
 #### Sample code
 
@@ -414,4 +467,128 @@ class TooltipDemo extends Component {
 
 ## 4. Flow.js 
 
-The fourth and final section 
+The fourth and final section of this guide will cover the actual functionality and structure of Flow.js and some of its specifications. There may be a few poor design choices due to inexperience with these libraries.
+
+### Functionality
+
+Flow.js is a flow editor for machine learning developers and programmers that is easy to modify to their needs. It is composed of two main components: the **toolbar** and the **editor**. The toolbar contains **tiles** that can be dragged onto the editor to create **nodes**. These nodes have **ports** that can be connected to one another to make **connections**.
+
+Nodes can be selected, and their selection status can be toggled by clicking. Nodes can also have right click context menus that provide information about the node and options to edit the node.
+
+Everything is drag-and-drop: tiles are dragged from the toolbar to the editor, nodes are dragged along the editor to move them, and connections are made by dragging one port onto another. 
+
+### Components
+
+The hierarchy of the Flow.js components looks as follows:
+
+* Flow
+   * Toolbar
+     * Tile
+   * Editor
+     * Node
+       * Port
+       * NodeContextMenu
+     * Connection
+   * EditorDragLayer
+
+Each one of these components will be covered below, along with a section of their props describing what each one does.
+
+#### Flow
+
+Flow is the wrapper component. It defines the `<div>` that encompasses every component of Flow.js. The two major displayed child components are the Toolbar and the Editor. The `<Popup />` component is required as a global object by the `react-popup` package. The `<EditorDragLayer />` acts as a `react-dnd` drag layer that displays a constantly updating preview of a connection being made. If a change to the dimensions of the entire editor was to be made, this would be the location.
+
+It has no props, so there is no section here.
+
+#### Toolbar
+
+The Toolbar acts as a container for all of the tiles (icons that generate new nodes on the editor). Other than some CSS to define its location, color, and borders, it has nothing else.
+
+It has no props, so there is no section here.
+
+#### Tile
+
+A Tile represents a draggable source for a new node on the editor. Its `beginDrag()` function contains information about the tile location so the drag offset can be used to calculate the final placement of the Node. As of now, the drag preview is just the tile icon itself. The Tile component also renders a `ReactTooltip` that will display the node's name if a cursor is hovered over the icon.
+
+##### Props
+
+* name: a string that represents the type of node that will be generated. A list of the names can be found in the [constants](#constants) section below.
+* connectDragSource: a function generated by React-dnd that allows the developer to register a JSX object to be a drag source.
+* connectDragPreview: a function generated by React-dnd that allows the developer to register an image preview to a drag source.
+
+#### Editor
+
+The Editor component is where most of the activity occurs in Flow.js. First of all, it acts as a drop target for Tiles and Nodes. When a Tile is dragged on, a Node is placed on the drop location, and when a Node is dragged from the Editor onto itself, the Node moves. The `drop()` function does all of these calculations.
+
+As can be seen in the constructor, Editor is where all of the state data is stored for all of Flow.js. The state data is split into two types: dusty and clean. The dusty data, once updated, will make the component dirty, which is a React technical term that means the component and its children need to be rerendered. This data is stored directly in the `this.state` variable, as a call to `this.setState()` will directly update that data and automatically set the component as dirty. The clean state data is data that does not need a rerendering on update. This data is stored as attributes of the component (e.g. `this.nextId`). There is currently a preset example node that will be displayed on load.
+
+The `componentWillReceiveProps()` method is currently used for detecting the delete keystroke and will delete all selected nodes and connections.
+
+The `render()` method creates arrays of JSX node and connection objects separately, before combining them together to create the entire editor.
+
+There are also several helper methods that are passed as props to child components that allow them to modify the state of the editor, such as adding/deleting connections, modifying nodes, etc. This callback-props passing & centralized state system is so common across React projects that there are packages like [Redux](https://github.com/reactjs/redux) that act as state containers to centralize all of the data.
+
+##### Props
+
+* connectDropTarget: a function generated by React-dnd that allows the developer to register a JSX object to be a drop target.
+
+#### Node
+
+The Node component represents an individual node in the flow diagram. While currently each and every node is the same (excluding IDs), it is easy to create new unique Nodes extending from the base class. By default, each node has one in port and one out port. InPorts and OutPorts are differentiated in the [Port](#port) section.
+
+Nodes register the click event in `componentDidMount()` so they can detect when they are being selected/deselected. The drag preview is also defined here as a static box with the same CSS as the actual box.
+
+In the `render()` method, first the two ports are created, then they are attached to a box that has lots of defining CSS, a `ContextMenuTrigger` is created encapsulating the box, and finally the box is positioned in a `<div>`.
+
+##### Props
+
+* id: a number that represents the node's ID.
+* left/top: numbers that represent the pixel location of the node.
+* inPorts/outPorts: the number of in/out ports this node has.
+* nodeName: a string that represents the type of node this is. A list of the names can be found in the [constants](#constants) section below.
+* isSelected: a boolean representing whether or not this node is selected.
+* modifySelection: a function that sets the selection state of any node.
+* connectedPorts: a list of which ports on this node are connected.
+* add/deleteConnection: functions that help create new or destroy existing connections; passed directly to InPorts.
+* getNextConnectionId: self explanatory; increments the current counter by one.
+* isDragging: a boolean generated by React-dnd that tells us whether the node is being dragged.
+* connectDragSource: a function generated by React-dnd that allows the developer to register a JSX object to be a drag source.
+* connectDragPreview: a function generated by React-dnd that allows the developer to register an image preview to a drag source.
+
+#### Port
+
+Ports are starting and ending points for connections. Since connections are directional, there are in and out ports. Both the `InPort` and `OutPort` component classes extend a base `Port` class, which contains shared functionality as well as acting as a model for the preview when its node is being dragged.
+
+The `beginDrag()` function simply provides basic information that the drop target port will need in its `drop()` function. The `drop()` function deletes existing connections if they exist and create a new one in its place. There is a `canDrop()` function in the drop `spec` to prevent nodes from connecting to themselves.  
+
+##### Props
+
+* nodeID/portID: identification numbers that allow us to build connections.
+* connected: boolean representing whether the port is already connected. 
+* getNextConnectionId: self explanatory; increments the current counter by one.
+
+For OutPort:
+
+* connectDragSource: a function generated by React-dnd that allows the developer to register a JSX object to be a drag source.
+* connectDragPreview: a function generated by React-dnd that allows the developer to register an image preview to a drag source.
+
+For InPort:
+
+* add/deleteConnection: functions that help create new or destroy existing connections.
+* connectDropTarget: a function generated by React-dnd that allows the developer to register a JSX object to be a drop target.
+
+#### NodeContextMenu
+
+The NodeContextMenu is a model of a node's right click menu. As of right now, it is barebones and only displays basic information about the node. Since the menu is in a different component than the trigger, the `connectMenu()` function is used to pass props from the parent component of the trigger (Node) to this component.
+
+##### Props
+
+* id: a string representing the type of contextmenu generated. In this case there is only one type, and the name can be found in the [constants](#constants) section.
+* trigger: an object that contains information passed from the node. Its shape can be whatever you want.
+
+#### Connection
+
+
+
+#### EditorDragLayer
+
+### Constants
