@@ -174,6 +174,20 @@ class Editor extends Component {
 		return nextId
 	}
 
+	exportData() {
+		var data = {}
+		data.nodes = Object.keys(this.state.nodes)
+		data.connections = []
+
+		for (var key in this.state.connections) {
+			data.connections.push({
+				sNode: this.state.connections[key].sNodeId,
+				eNode: this.state.connections[key].eNodeId
+			})
+		}
+		alert(JSON.stringify(data))
+	}
+
 	render() {
 		const { connectDropTarget } = this.props;
 
@@ -223,6 +237,13 @@ class Editor extends Component {
 			}}>
 				{ nodes }
 				<NodeContextMenu />
+
+				<button onClick={ this.exportData.bind(this) } style={{
+					fontSize: 11, position: 'absolute', left: 445, top: 475
+				}}>
+					Export
+				</button>
+
 				<svg style={{
 					height: '100%',
 					width: '100%'
